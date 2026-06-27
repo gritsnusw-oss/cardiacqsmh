@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cardiac team by QSMH</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Sarabun', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    min-height: 100vh;
+    color: #e6edf3;
+    padding: 20px;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  header {
+    background: linear-gradient(90deg, #c41e3a, #8b0000);
+    padding: 24px 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  header h1 { font-size: 26px; font-weight: 700; letter-spacing: 0.5px; }
+  header p { margin-top: 4px; opacity: 0.85; font-size: 14px; }
+
+  .tabs {
+    display: flex;
+    background: rgba(0,0,0,0.3);
+    border-bottom: 2px solid rgba(255,255,255,0.08);
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 16px 20px;
+    background: transparent;
+    border: none;
+    color: #c9d1d9;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border-bottom: 3px solid transparent;
+    font-family: inherit;
+  }
+  .tab-btn:hover { background: rgba(255,255,255,0.05); color: #fff; }
+  .tab-btn.active {
+    color: #ff6b81;
+    border-bottom-color: #ff6b81;
+    background: rgba(255,107,129,0.1);
+  }
+
+  .tab-content { display: none; padding: 32px; min-height: 500px; }
+  .tab-content.active { display: block; }
+
+  .layout-2col { display: grid; grid-template-columns: 320px 1fr; gap: 24px; }
+  .view-list {
+    background: rgba(0,0,0,0.25);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    max-height: 800px;
+    overflow-y: auto;
+  }
+  .view-list::-webkit-scrollbar { width: 6px; }
+  .view-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+  .category { margin-bottom: 16px; }
+  .category-header {
+    color: #ff6b81;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255,107,129,0.3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .category-header::before {
+    content: '';
+    width: 4px; height: 16px;
+    background: #ff6b81;
+    border-radius: 2px;
+  }
+
+  .view-item {
+    padding: 9px 14px;
+    margin-bottom: 4px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+    font-size: 13.5px;
+  }
+  .view-item:hover {
+    background: rgba(255,107,129,0.15);
+    border-left-color: #ff6b81;
+    transform: translateX(4px);
+  }
+  .view-item.active {
+    background: rgba(255,107,129,0.2);
+    border-left-color: #ff6b81;
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .subgroup { margin-top: 4px; margin-bottom: 4px; }
+  .subgroup-header {
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #ffd5dd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .subgroup-header:hover { background: rgba(255,107,129,0.12); }
+  .subgroup-header .chevron {
+    transition: transform 0.25s ease;
+    font-size: 12px;
+    opacity: 0.7;
+  }
+  .subgroup.open .subgroup-header .chevron { transform: rotate(90deg); }
+  .subgroup-items {
+    display: none;
+    padding-left: 14px;
+    border-left: 2px solid rgba(255,107,129,0.25);
+    margin-left: 8px;
+  }
+  .subgroup.open .subgroup-items { display: block; }
+  .subgroup-items .view-item { font-size: 13px; padding: 8px 12px; }
+
+  .view-display {
+    background: rgba(0,0,0,0.25);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+  }
+  .view-display .breadcrumb {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .view-display h2 { color: #ff6b81; margin-bottom: 16px; font-size: 22px; }
+
+  .view-image {
+    flex: 1;
+    background: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 12px;
+    min-height: 320px;
+    overflow: hidden;
+  }
+  .view-image img {
+    max-width: 100%;
+    max-height: 600px;
+    border-radius: 4px;
+    cursor: zoom-in;
+    transition: transform 0.2s ease;
+  }
+  .view-image img:hover { transform: scale(1.02); }
+  .view-image .placeholder {
+    color: rgba(0,0,0,0.4);
+    text-align: center;
+    padding: 40px 20px;
+    line-height: 1.6;
+  }
+
+  .view-description {
+    margin-top: 16px;
+    padding: 14px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #c9d1d9;
+  }
+  .view-description .tip {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: rgba(255,193,7,0.08);
+    border-left: 3px solid #ffc107;
+    border-radius: 4px;
+    color: #ffe082;
+    font-size: 13px;
+  }
+  .view-description ul { margin: 6px 0 0 18px; }
+  .view-description li { margin-bottom: 4px; }
+
+  /* Lightbox */
+  .lightbox {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.9);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+    padding: 20px;
+  }
+  .lightbox.show { display: flex; }
+  .lightbox img { max-width: 95%; max-height: 95vh; border-radius: 8px; }
+
+  /* Calculator */
+  .calc-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .calc-tab-btn {
+    padding: 10px 18px;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: #c9d1d9;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+  .calc-tab-btn:hover { background: rgba(255,107,129,0.15); }
+  .calc-tab-btn.active {
+    background: linear-gradient(135deg, #c41e3a, #8b0000);
+    color: #fff;
+    border-color: transparent;
+  }
+
+  .calc-panel { display: none; }
+  .calc-panel.active { display: block; }
+
+  .calc-card {
+    background: rgba(0,0,0,0.25);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .calc-card h2 { color: #ff6b81; margin-bottom: 8px; font-size: 22px; }
+  .calc-card .subtitle { color: rgba(255,255,255,0.6); font-size: 13px; margin-bottom: 20px; }
+
+  .input-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .input-group label {
+    display: block;
+    font-size: 13px;
+    color: #c9d1d9;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .input-group input {
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 15px;
+    font-family: inherit;
+  }
+  .input-group input:focus { outline: none; border-color: #ff6b81; }
+
+  .btn-calc {
+    background: linear-gradient(135deg, #c41e3a, #8b0000);
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+  .btn-calc:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(196,30,58,0.4); }
+
+  .result-box {
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(255,107,129,0.1), rgba(196,30,58,0.05));
+    border-radius: 12px;
+    border-left: 4px solid #ff6b81;
+    display: none;
+  }
+  .result-box.show { display: block; }
+  .result-box h3 { color: #ff6b81; margin-bottom: 12px; font-size: 16px; }
+  .result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .result-item:last-child { border-bottom: none; }
+  .result-label { color: #c9d1d9; font-size: 14px; }
+  .result-value { color: #fff; font-weight: 700; font-size: 18px; }
+  .result-value .unit { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 400; margin-left: 4px; }
+
+  .note-box {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: rgba(255,193,7,0.1);
+    border-left: 3px solid #ffc107;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #ffe082;
+    line-height: 1.7;
+  }
+
+  /* Rate selector */
+  .rate-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .rate-btn {
+    flex: 1;
+    padding: 14px 18px;
+    background: rgba(0,0,0,0.3);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: #c9d1d9;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    text-align: center;
+  }
+  .rate-btn small { display: block; font-size: 11px; font-weight: 400; opacity: 0.7; margin-top: 2px; }
+  .rate-btn:hover { background: rgba(255,107,129,0.15); border-color: rgba(255,107,129,0.4); }
+  .rate-btn.active {
+    background: linear-gradient(135deg, #c41e3a, #8b0000);
+    border-color: transparent;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(196,30,58,0.4);
+  }
+  input[readonly] { opacity: 0.7; cursor: not-allowed; }
+
+  /* Dual phase table */
+  .dp-table {
+    margin-top: 18px;
+    background: rgba(0,0,0,0.35);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .dp-table table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .dp-table th, .dp-table td {
+    padding: 10px 12px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .dp-table th {
+    background: linear-gradient(135deg, #c41e3a, #8b0000);
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .dp-table td:first-child { text-align: left; color: #ffd5dd; }
+  .dp-table td.cm { color: #4fc3f7; font-weight: 700; }
+  .dp-table td.ns { color: #aed581; font-weight: 700; }
+  .dp-table tbody tr:last-child td { border-bottom: none; }
+  .dp-table tbody tr:hover { background: rgba(255,107,129,0.06); }
+
+  .category-picker { display:flex; gap:24px; padding:48px 40px; justify-content:center; align-items:stretch; min-height:440px; }
+  .cat-card { flex:1; max-width:300px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding:40px 28px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; cursor:pointer; transition:all 0.3s ease; text-align:center; position:relative; overflow:hidden; }
+  .cat-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,107,129,0.1),rgba(196,30,58,0.05)); opacity:0; transition:opacity 0.3s ease; }
+  .cat-card:hover { transform:translateY(-8px); border-color:rgba(255,107,129,0.55); box-shadow:0 16px 48px rgba(255,107,129,0.22); }
+  .cat-card:hover::before { opacity:1; }
+  .cat-icon { font-size:60px; line-height:1; position:relative; }
+  .cat-name { font-size:26px; font-weight:700; color:#fff; position:relative; }
+  .cat-subtitle { font-size:13px; color:rgba(255,255,255,0.45); position:relative; }
+  .cat-count { margin-top:10px; padding:6px 18px; background:rgba(255,107,129,0.12); border:1px solid rgba(255,107,129,0.3); border-radius:20px; font-size:13px; color:#ff6b81; font-weight:600; position:relative; }
+  .cat-arrow { margin-top:6px; font-size:22px; color:rgba(255,107,129,0.55); transition:transform 0.3s ease; position:relative; }
+  .cat-card:hover .cat-arrow { transform:translateX(8px); }
+  .detail-header { display:flex; align-items:center; gap:14px; padding:14px 32px; background:rgba(0,0,0,0.2); border-bottom:1px solid rgba(255,255,255,0.06); }
+  .btn-back { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); color:#c9d1d9; padding:8px 16px; border-radius:8px; cursor:pointer; font-size:14px; font-family:inherit; display:flex; align-items:center; gap:6px; transition:all 0.2s ease; }
+  .btn-back:hover { background:rgba(255,107,129,0.15); border-color:rgba(255,107,129,0.4); color:#fff; }
+  .detail-header-title { font-size:18px; font-weight:700; color:#ff6b81; }
+  .detail-header-sub { font-size:13px; color:rgba(255,255,255,0.4); }
+  #categoryDetail { display:none; }
+  #categoryDetail.active { display:block; }
+  #categoryDetail .layout-2col { padding:24px 32px; }
+  @media (max-width:768px) {
+    .layout-2col { grid-template-columns:1fr; }
+    header h1 { font-size:20px; }
+    .tab-btn { font-size:14px; padding:12px 10px; }
+    .category-picker { flex-direction:column; padding:24px 16px; align-items:center; }
+    .cat-card { max-width:100%; width:100%; padding:28px 20px; }
+    #categoryDetail .layout-2col { padding:16px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Cardiac team by QSMH</h1>
+    <p>Anatomy &amp; Plane • Flow • Drug Calculator</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="overview">Overview MRI</button>
+    <button class="tab-btn" data-tab="calculator">Drug Calculator</button>
+  </div>
+
+  <div class="tab-content active" id="overview">
+    <div class="category-picker" id="categoryPicker">
+      <div class="cat-card" data-category="Localize" data-first="loc_2ch"><div class="cat-icon">📍</div><div class="cat-name">Localize</div><div class="cat-subtitle">การวาง Localizer</div><div class="cat-count">4 views</div><div class="cat-arrow">→</div></div>
+      <div class="cat-card" data-category="Cine" data-first="cine_2ch"><div class="cat-icon">🫀</div><div class="cat-name">Cine</div><div class="cat-subtitle">Anatomy &amp; Plane</div><div class="cat-count">9 views</div><div class="cat-arrow">→</div></div>
+      <div class="cat-card" data-category="Flow" data-first="pc_ao"><div class="cat-icon">📈</div><div class="cat-name">Flow</div><div class="cat-subtitle">Phase Contrast</div><div class="cat-count">11 views</div><div class="cat-arrow">→</div></div>
+    </div>
+    <div id="categoryDetail">
+      <div class="detail-header"><button class="btn-back" id="btnBack">← กลับ</button><div><div class="detail-header-title" id="detailTitle"></div><div class="detail-header-sub" id="detailSub"></div></div></div>
+      <div class="layout-2col"><div class="view-list" id="viewList"></div><div class="view-display"><div class="breadcrumb" id="viewBreadcrumb"></div><h2 id="viewTitle"></h2><div class="view-image" id="viewImage"><span class="placeholder">Loading...</span></div><div class="view-description" id="viewDesc"></div></div></div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="calculator">
+    <div class="calc-tabs">
+      <button class="calc-tab-btn active" data-calc="adenosine">Adenosine Stress</button>
+      <button class="calc-tab-btn" data-calc="perfusion">Perfusion</button>
+      <button class="calc-tab-btn" data-calc="dualphase">Dual Phase</button>
+    </div>
+
+    <div class="calc-panel active" id="adenosine">
+      <div class="calc-card">
+        <h2>Adenosine Stress</h2>
+        <p class="subtitle"> Adenosine สำหรับ stress test (มี 2 dose rates)</p>
+
+        <div class="rate-selector">
+          <button class="rate-btn active" data-rate="140" onclick="selectRate(140)">Rate 140 <small>(3.5 นาที)</small></button>
+          <button class="rate-btn" data-rate="210" onclick="selectRate(210)">Rate 210 <small>(2 นาที)</small></button>
+        </div>
+
+        <div class="input-grid">
+          <div class="input-group"><label>น้ำหนักผู้ป่วย (kg)</label><input type="number" id="ade_weight" placeholder="เช่น 70" step="0.1" oninput="calcAdenosine()"></div>
+          <div class="input-group"><label>Dose rate (mcg/kg/min)</label><input type="number" id="ade_rate" value="140" step="1" readonly></div>
+          <div class="input-group"><label>ระยะเวลา (min)</label><input type="number" id="ade_time" value="3.5" step="0.1" readonly></div>
+        </div>
+
+        <button class="btn-calc" onclick="calcAdenosine()">คำนวณ</button>
+
+        <div class="result-box" id="ade_result"><h3>ผลการคำนวณ</h3><div id="ade_output"></div></div>
+      </div>
+    </div>
+
+    <div class="calc-panel" id="perfusion">
+      <div class="calc-card">
+        <h2>Perfusion</h2>
+        <p class="subtitle">คำนวณขนาดยา Gadovist สำหรับ perfusion imaging</p>
+
+        <div class="rate-selector">
+          <button class="rate-btn active" data-pfactor="0.15" onclick="selectPerfMode(0.15)">Perfusion only <small>(0.15 × BW)</small></button>
+          <button class="rate-btn" data-pfactor="0.175" onclick="selectPerfMode(0.175)">Adenosine + Perfusion <small>(0.175 × BW)</small></button>
+        </div>
+
+        <div class="input-grid">
+          <div class="input-group"><label>น้ำหนักผู้ป่วย (kg)</label><input type="number" id="perf_weight" placeholder="เช่น 70" step="0.1" oninput="calcPerfusion()"></div>
+          <div class="input-group"><label>Factor</label><input type="number" id="perf_factor" value="0.15" step="0.001" readonly></div>
+        </div>
+
+        <button class="btn-calc" onclick="calcPerfusion()">คำนวณ</button>
+
+        <div class="result-box" id="perf_result"><h3>ผลการคำนวณ</h3><div id="perf_output"></div></div>
+      </div>
+    </div>
+
+    <div class="calc-panel" id="dualphase">
+      <div class="calc-card">
+        <h2>Dual Phase MRA — Contrast Calculator</h2>
+        <p class="subtitle">Bolus (Fast) + Slow infusion — เลือก protocol อัตโนมัติตามขนาด Total CM</p>
+
+        <div class="input-grid">
+          <div class="input-group"><label>Total amount of CM (ml)</label><input type="number" id="dp_total" placeholder="เช่น 20" min="3" step="0.1" oninput="calcDualPhase()"></div>
+          <div class="input-group"><label>Predicted scan length (sec)</label><input type="number" id="dp_scan" placeholder="เช่น 100" step="1" oninput="calcDualPhase()"></div>
+          <div class="input-group"><label>Tubing volume (ml)</label><input type="number" id="dp_tube" value="7.5" step="0.1" oninput="calcDualPhase()"></div>
+          <div class="input-group"><label>Tubing buffer (ml)</label><input type="number" id="dp_buffer" value="1.5" step="0.1" oninput="calcDualPhase()"></div>
+          <div class="input-group"><label>Bolus %</label><input type="number" id="dp_bpct" value="0.6" min="0" max="1" step="0.05" oninput="calcDualPhase()"></div>
+        </div>
+
+        <button class="btn-calc" onclick="calcDualPhase()">คำนวณ</button>
+
+        <div class="result-box" id="dp_result">
+          <h3>ผลการคำนวณ</h3>
+          <div id="dp_output"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('show')">
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<script>
+  // ทุก view ใช้รูปไหน — มาจาก PNG ที่อยู่ในโฟลเดอร์เดียวกัน
+  const viewData = {
+    // Localize → page 21
+    "loc_2ch":   { title: "Localize 2CH",  image: "loc_4ch.png", desc: `วาง plane ผ่าน <b>กึ่งกลาง Valve</b> ถึง <b>Apex</b> <div class="tip">💡 Shimming → scan plane ไหน ให้วางที่ Plane นั้น + symmetric volume ใน Heart </div>` },
+    "loc_4ch":   { title: "Localize 4CH",  image: "loc_4ch.png", desc: `จาก Localize 2CH → วาง plane จาก Valve → Apex  เพื่อให้ได้ 4-chamber view` },
+    "loc_sax":   { title: "Localize SAX",  image: "loc_sax.png", desc: `วาง stack ของ plane เอียงตาม Myocardium (ตั้งฉากกับ long axis ทั้งจาก 2CH และ 4CH) ใช้สำหรับสร้าง Short Axis stack` },
+    "loc_3ch":   { title: "Localize 3CH",  image: "loc_3ch.png", desc: `จาก Localize SAX → วาง plane ตัดผ่านกึ่งกลาง aortic valve  ` },
+
+
+
+    // Cine 2CH/4CH → page 22
+    "cine_2ch":  { title: "Cine 2CH", image: "cine_2ch.png", desc: `2 Chamber view (LAX) → Lt.Ventricle และ Lt.Atrium ใช้ประเมิน anterior และ inferior wall วาง plane จาก<div class="tip"><ul><li>💡 Axial Fiesta: ผ่านกึ่งกลาง valve → apex </li><li> SAX: ขนานกับ Apex<b> ห้ามโดน Atrioventricular septum</b></li></ul></div>` },
+
+    "cine_4ch":  { title: "Cine 4CH", image: "cine_4ch.png", desc: `4 Chamber view (LAX) → Lt.Ventricle Lt.Atrium Rt.Ventricle Rt.Atrium วาง plane จาก <div class="tip"><ul><li> SAX: ตั้งฉากกับ Apex</li><li>ระวัง: ห้ามโดน Aortic Valve</li></ul></div>` },
+
+    // Cine SAX/3CH → page 23
+    "cine_sax":  { title: "Cine SAX", image: "cine_sax.png", desc: `Short Axis stack (SAX) ของ LV ใช้คำนวณ LV volume, EF วาง plane จาก <div class="tip">💡4CH & 2CH cine:<b>ตั้งฉากกับ</b> Bicuspid Valve และ Myocardium</div>` },
+    "cine_3ch":  { title: "Cine 3CH", image: "cine_3ch.png", desc: `3 Chamber view (LAX) → Lt.Ventricle, Lt.Atrium, Aortic valve และ Aorta วาง plane จาก<div class="tip">💡 SAX cine: ตัดผ่าน <b>Aortic Valve และ Left Ventricle</b></div>` },
+
+    // Cine 2CH RV / Aortic Valve → page 24
+    "cine_2chrv":{ title: "Cine 2CH Rt. Ventricle", image: "cine_2chrv.png", desc: `2-Chamber view (LAX) → Rt.Atrium และ Rt.Ventricle วาง Plane จาก <div class="tip">💡<ul><li> Cine SAX: กึ่งกลาง Rt.ventricle </li><li>Cine 4CH: ขนานกับ septum </li></ul></div>` },
+    "aov_view":  { title: "Aortic Valve (Cine)", image: "aortic_valve.png", desc: `วาง stack ของ plane ผ่านระดับ aortic valve โดยใช้ Cine 3CH และ Coronal Fiesta เป็น reference<div class="tip">💡<ul><li>วาง 1-3 slices ขนานกับ aortic valve</li><li>ดู valve area ใน systole &amp; diastole</li></ul></div>` },
+
+    // In & Out-flow tract → page 25
+    "cine_lvot": { title: "Cine LVOT", image: "lvot.png", desc: `Left Ventricular Outflow Tract view (ดู aortic valve และ subaortic area)<ul><li>ดึง Coronal มา → ตั้ง <b>FOV เป็น Coronal</b></li><li>วางจาก Cine 3CH</li></ul><div class="tip">⚠️ ระวัง Valve สะบัด — ให้ดูทั้ง Systolic &amp; Diastolic</div>` },
+    "cine_rvot": { title: "Cine RVOT", image: "rvot.png", desc: `Right Ventricular Outflow Tract view<ul><li>วางจาก Axial FIESTA และ RVIT</li><li>ตั้ง <b>FOV เป็น Sagittal</b></li></ul>` },
+
+    // How to RVIT / Mitral Valve → page 26
+    "rvit":      { title: "RVIT (Right Ventricular Inflow Tract)", image: "rvit.png", desc: `ดู Tricuspid valve และ inflow ของ RV<ul><li>วางจาก SAX และ 4CH</li><li>ตัดผ่าน RA → RV ผ่าน tricuspid valve</li></ul>` },
+
+    // Pulmonic Valve → page 27
+    // Phase contrast venc table → page 28
+    "venc_table":{ title: "Phase Contrast — Venc Reference Table", image: "venc_table.png", desc: `ตาราง Velocity Encoding (cm/s) สำหรับแต่ละจุดที่ทำ phase contrast<div class="tip">• เอาไปทำ Qp/Qs Flow ต่อ<br>• Check Aliasing Artifact<br>• ถ้ามี aliasing → เพิ่ม Velocity ทีละ 20</div>` },
+
+    // PC AO → page 29
+    "pc_ao":     { title: "PC AO (Aorta)", image: "pc_ao.png", desc: `Phase contrast ที่ Aorta<ul><li>วาง plane ตั้งฉากกับ ascending aorta</li></ul><div class="tip">Venc = <b>150 cm/s</b></div>` },
+    "pc_ao_cc":  { title: "PC AO Candy Cane View", image: "pc_ao_candy_cane.png", desc: `Phase contrast Aorta "Candy cane view" จาก sagittal-oblique เห็น aortic arch <div class="tip">Venc = <b>150 cm/s</b></div>` },
+
+    // PC PA / PC RPA → page 30
+    "pc_pa":     { title: "PC PA (Main Pulmonary Artery)", image: "pc_pa.png", desc: `Phase contrast ที่ MPA สำหรับวัด pulmonary flow<ul><li>วางจาก RVOT และ axial Fiesta ตั้งฉากกับ MPA</li><li>ตั้งฉากกับ MPA</li></ul><div class="tip">Venc = <b>150 cm/s</b> | นำไปใช้คำนวณ Qp/Qs ต่อ</div>` },
+    "pc_rpa":    { title: "PC RPA (Right Pulmonary Artery)", image: "pc_rpa.png", desc: `Phase contrast ที่ Right pulmonary artery<ul><li>Localize ก่อน: axial Fiesta ผ่านกึ่งกลาง RPA</li><li>วาง plane ตั้งฉากกับ RPA</li></ul><div class="tip">Venc = <b>150 cm/s</b></div>` },
+
+    // PC LPA / PC RPV → page 31
+    "pc_lpa":    { title: "PC LPA (Left Pulmonary Artery)", image: "pc_lpa.png", desc: `Phase contrast ที่ Left pulmonary artery<ul><li>Localize ก่อน: axial Fiesta ผ่านกึ่งกลาง LPA</li><li>วาง plane ตั้งฉากกับ LPA</li></ul><div class="tip">Venc = <b>150 cm/s</b></div>` },
+    "pc_rpv":    { title: "PC RPV (Right Pulmonary Vein)", image: "pc_rpv.png", desc: `Phase contrast ที่ Right
+
+ Pulmonary Vein<ul><li>Localize: axial Fieata ผ่านกึ่งกลาง RPV</li><li>วาง plane ตั้งฉากกับ RPV </li></ul><div class="tip">Venc = <b>120 / 150 cm/s</b></div>` },
+
+    // PC LPV / PC LPV 
+    "pc_lpv":    { title: "PC LPV (Left Pulmonary Vein)", image: "pc_lpv.png", desc: `Phase contrast ที่ Left Pulmonary Vein<ul><li>Localize: axial Fiesta ผ่านกึ่งกลาง LPV</li><li>วาง plane ตั้งฉากกับ LPV  
+</li></ul><div class="tip">Venc = <b>120 / 150 cm/s</b></div>` },
+
+    // PC SVC / PC SVC
+    "pc_svc":    { title: "PC SVC (Superior Vena Cava)", image: "pc_svc.png", desc: `Phase contrast ที่ Superior Vena Cava<ul><li>Localize: axial ใต้ Azygos Vein</li><li>วาง plane ตั้งฉากกับ SVC </li></ul><div class="tip">Venc = <b>120 / 150 cm/s</b></div>` },
+
+   // PC DAO / PC DAO 
+    "pc_dao":    { title: "PC DAO (Descending Aorta)", image: "pc_dao.png", desc: `Phase contrast ที่ Descending Aorta<ul><li>วางตั้งฉากกับ Descending aorta ใน plane Sagittal</li></ul><div class="tip">Venc = <b>120 / 150 cm/s</b></div>` },
+
+
+
+    // Aortic valve plane (6 ระดับ - รวมเป็นรูปเดียว) → page 33
+    "aov_levels":{ title: "Aortic Valve Plane (6 ระดับ)", image: "aortic_valve_plane.png", desc: `ระดับการวาง plane ของ aortic valve และ ascending aorta<ul><li><b>1.</b> Below Aortic valve</li><li><b>2.</b> Aortic valve (AoV)</li><li><b>3.</b> Aortic sinus</li><li><b>4.</b> Sinotubular junction</li><li><b>5.</b> Ascending aorta (AAO)</li><li><b>6.</b> Ascending aorta below brachiocephalic trunk</li></ul>` }
+  };
+
+  function toggleSubgroup(el) { el.parentElement.classList.toggle('open'); }
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  function selectView(key, cat) {
+    const data = viewData[key];
+    if (!data) return;
+    document.getElementById('viewBreadcrumb').textContent = cat || '';
+    document.getElementById('viewTitle').textContent = data.title;
+    document.getElementById('viewDesc').innerHTML = data.desc || '';
+    const imgBox = document.getElementById('viewImage');
+    if (data.image) {
+      imgBox.innerHTML = `<img src="${data.image}" alt="${data.title}" onclick="openLightbox(this.src)">`;
+    } else {
+      imgBox.innerHTML = `<span class="placeholder">ยังไม่ได้ใส่รูป</span>`;
+    }
+  }
+
+  function openLightbox(src) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightbox').classList.add('show');
+  }
+
+  const catItems={Localize:[{v:'loc_2ch',l:'Localize 2CH'},{v:'loc_4ch',l:'Localize 4CH'},{v:'loc_sax',l:'Localize SAX'},{v:'loc_3ch',l:'Localize 3CH'}],Cine:[{v:'cine_2ch',l:'Cine 2CH'},{v:'cine_4ch',l:'Cine 4CH'},{v:'cine_sax',l:'Cine SAX'},{v:'cine_3ch',l:'Cine 3CH'},{v:'cine_2chrv',l:'Cine 2CH Rt. Ventricle'},{v:'cine_lvot',l:'Cine LVOT'},{v:'cine_rvot',l:'Cine RVOT'},{v:'rvit',l:'RVIT'},{v:'aov_view',l:'Aortic Valve'}],Flow:[{v:'pc_ao',l:'PC AO (Aorta)'},{v:'pc_ao_cc',l:'PC AO Candy Cane'},{v:'pc_pa',l:'PC PA (MPA)'},{v:'pc_rpa',l:'PC RPA'},{v:'pc_lpa',l:'PC LPA'},{v:'pc_rpv',l:'PC RPV'},{v:'pc_lpv',l:'PC LPV'},{v:'pc_svc',l:'PC SVC'},{v:'pc_dao',l:'PC DAO'},{v:'venc_table',l:'📊 Venc Table'},{v:'aov_levels',l:'Aortic Valve Plane'}]};
+  const catMeta={Localize:'การวาง Localizer',Cine:'Anatomy & Plane',Flow:'Phase Contrast'};
+  function openCategory(cat,first){const el=document.getElementById('viewList');el.innerHTML='';catItems[cat].forEach((it,i)=>{const d=document.createElement('div');d.className='view-item'+(i===0?' active':'');d.dataset.view=it.v;d.dataset.cat=cat;d.textContent=it.l;d.addEventListener('click',()=>{el.querySelectorAll('.view-item').forEach(x=>x.classList.remove('active'));d.classList.add('active');selectView(it.v,cat);});el.appendChild(d);});document.getElementById('detailTitle').textContent=cat;document.getElementById('detailSub').textContent=catMeta[cat];document.getElementById('categoryPicker').style.display='none';document.getElementById('categoryDetail').classList.add('active');selectView(first,cat);}
+  document.querySelectorAll('.cat-card').forEach(c=>c.addEventListener('click',()=>openCategory(c.dataset.category,c.dataset.first)));
+  document.getElementById('btnBack').addEventListener('click',()=>{document.getElementById('categoryDetail').classList.remove('active');document.getElementById('categoryPicker').style.display='flex';});
+
+  document.querySelectorAll('.calc-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.calc-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.calc-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.calc).classList.add('active');
+    });
+  });
+
+  function selectRate(rate) {
+    document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.rate-btn[data-rate="${rate}"]`).classList.add('active');
+    document.getElementById('ade_rate').value = rate;
+    document.getElementById('ade_time').value = (rate === 140) ? 3.5 : 2;
+    calcAdenosine();
+  }
+
+  function calcAdenosine() {
+    const w = parseFloat(document.getElementById('ade_weight').value) || 0;
+    if (w <= 0) {
+      document.getElementById('ade_result').classList.remove('show');
+      return;
+    }
+    const rate = parseInt(document.getElementById('ade_rate').value) || 140;
+    // Rate 140 → factor 0.14, time 3.5 min  |  Rate 210 → factor 0.21, time 2 min
+    const factor = (rate === 140) ? 0.14 : 0.21;
+    const time = (rate === 140) ? 3.5 : 2;
+
+    const totalMg = factor * w * time;
+    const vialsExact = totalMg / 6;       // ขวดจริง (ทศนิยม)
+    const vialsCeil = Math.ceil(vialsExact); // ขวดที่ต้องเปิด
+    const drugVol = vialsExact * 2;       // mL ของยาที่ดูดมาใช้จริง
+    const nssVol = 40 - drugVol;          // เติม NSS ให้ครบ 40 mL
+
+    document.getElementById('ade_output').innerHTML = `
+      <div class="result-item"><span class="result-label">Adenosine (${factor} × ${w} × ${time})</span><span class="result-value">${totalMg.toFixed(2)}<span class="unit">mg</span></span></div>
+      <div class="result-item"><span class="result-label">จำนวนขวด (คำนวณ)</span><span class="result-value">${vialsExact.toFixed(2)}<span class="unit">ขวด</span></span></div>
+      <div class="result-item"><span class="result-label">จำนวนขวดที่ต้องเปิด</span><span class="result-value">${vialsCeil}<span class="unit">ขวด</span></span></div>
+      <div class="result-item"><span class="result-label">ปริมาตรยา Adenosine</span><span class="result-value">${drugVol.toFixed(2)}<span class="unit">mL</span></span></div>
+      <div class="result-item"><span class="result-label">เติม NSS</span><span class="result-value">${nssVol.toFixed(2)}<span class="unit">mL</span></span></div>
+      <div class="result-item"><span class="result-label">ปริมาตรรวม</span><span class="result-value">40.00<span class="unit">mL</span></span></div>`;
+    document.getElementById('ade_result').classList.add('show');
+  }
+
+  function selectPerfMode(factor) {
+    document.querySelectorAll('[data-pfactor]').forEach(b => b.classList.remove('active'));
+    document.querySelector(`[data-pfactor="${factor}"]`).classList.add('active');
+    document.getElementById('perf_factor').value = factor;
+    calcPerfusion();
+  }
+
+  function calcPerfusion() {
+    const w = parseFloat(document.getElementById('perf_weight').value) || 0;
+    if (w <= 0) {
+      document.getElementById('perf_result').classList.remove('show');
+      return;
+    }
+    const factor = parseFloat(document.getElementById('perf_factor').value) || 0.15;
+    const vol = factor * w;
+    let html = `
+      <div class="result-item"><span class="result-label">น้ำหนักตัว</span><span class="result-value">${w}<span class="unit">kg</span></span></div>
+      <div class="result-item"><span class="result-label">สูตร</span><span class="result-value" style="font-size:15px">${factor} × ${w}</span></div>
+      <div class="result-item"><span class="result-label">ปริมาตร Gadovist รวม</span><span class="result-value">${vol.toFixed(2)}<span class="unit">mL</span></span></div>`;
+    if (Math.abs(factor - 0.175) < 0.001) {
+      const adeVol = 0.10 * w;
+      const perfVol = 0.075 * w;
+      html += `
+        <div class="result-item"><span class="result-label">— สำหรับ Adenosine stress (0.10)</span><span class="result-value">${adeVol.toFixed(2)}<span class="unit">mL</span></span></div>
+        <div class="result-item"><span class="result-label">— สำหรับ Perfusion / rest (0.075)</span><span class="result-value">${perfVol.toFixed(2)}<span class="unit">mL</span></span></div>`;
+    }
+    document.getElementById('perf_output').innerHTML = html;
+    document.getElementById('perf_result').classList.add('show');
+  }
+
+  function calcDualPhase() {
+    const total = parseFloat(document.getElementById('dp_total').value) || 0;
+    const scan  = parseFloat(document.getElementById('dp_scan').value) || 0;
+    const tube  = parseFloat(document.getElementById('dp_tube').value) || 0;
+    const buf   = parseFloat(document.getElementById('dp_buffer').value) || 0;
+    const bpct  = parseFloat(document.getElementById('dp_bpct').value) || 0.6;
+    // Auto-calculated (not user input):
+    const brate = 0.6;                        // Phase 2 injection rate (standard 0.5–1.0)
+    const p4ns  = Math.max(10, tube + 2.5);   // Phase 4 NSS dose
+
+    if (total <= 0 || scan <= 0 || tube <= 0) {
+      document.getElementById('dp_result').classList.remove('show');
+      return;
+    }
+
+    const BOLUS = bpct;
+    const SLOW  = 1 - bpct;
+    const preload = tube - buf;
+    const bolusCM = BOLUS * total;
+    const slowCM  = SLOW * total;
+    const slowRate = slowCM / scan;
+    const scale = Math.min(1.0, total / 10);   // rate scaling factor for small Total
+
+    let p1Dose, p2Dose, p3Dose, p4Dose;
+    let p1Rate, p2Rate, p3Rate, p4Rate;
+    let p1Syr, p2Syr, p3Syr, p4Syr;
+    let p1Label, p2Label, p3Label, p4Label;
+    let protocolName;
+
+    // Phase 1: always CM, dose = min(Total, Pre-load), rate = 1.0 × scale
+    p1Syr = 'CM';
+    p1Dose = Math.min(total, preload);
+    p1Rate = 1.0 * scale;
+    p1Label = '1 Pre-load';
+    // Phase 4: always NSS at slow rate
+    p4Syr = 'NSS'; p4Rate = slowRate; p4Dose = p4ns; p4Label = '4 NS flush';
+
+    // Threshold สำหรับตัดสินใจ syringe และ rate ของ Phase 3
+    const threshold = tube / SLOW;   // = Tubing volume / Slow infusion%
+
+    if (total < preload) {
+      // Very Small protocol — CM is depleted before pre-load completes
+      protocolName = 'Very Small Total (Total < Pre-load)';
+      p2Syr = 'NSS'; p2Rate = brate;  p2Dose = preload - total;  p2Label = '2 NS pre-load';
+      p3Dose = bolusCM + buf;         p3Label = '3 NS push';
+    } else if (slowCM < tube) {
+      // Small protocol — Phase 3 is NSS to complete bolus delivery
+      protocolName = 'Small Total (Slow CM < Tubing)';
+      p2Syr = 'CM';  p2Rate = brate;  p2Dose = total - preload;  p2Label = '2 Bolus';
+      p3Dose = tube - slowCM;         p3Label = '3 NS push';
+    } else {
+      // Large protocol — Phase 3 is CM at slow rate
+      protocolName = 'Large Total (Slow CM ≥ Tubing)';
+      p2Syr = 'CM';  p2Rate = brate;  p2Dose = bolusCM + buf;    p2Label = '2 Bolus';
+      p3Dose = slowCM - tube;         p3Label = '3 Slow CM';
+    }
+
+    // Phase 3 syringe และ rate — กฎใหม่ตาม threshold (Tubing/Slow%)
+    if (total >= threshold) {
+      p3Syr = 'CM';
+      p3Rate = SLOW * (total / scan);          // = Slow rate
+    } else {
+      p3Syr = 'NSS';
+      p3Rate = bpct * (total / 10);            // = Bolus% × (Total/10)
+    }
+
+    const safe = (x) => (x > 0 ? x : 0);
+    const p1Time = p1Rate > 0 ? p1Dose / p1Rate : 0;
+    const p2Time = p2Rate > 0 ? p2Dose / p2Rate : 0;
+    const p3Time = p3Rate > 0 ? p3Dose / p3Rate : 0;
+    const p4Time = p4Rate > 0 ? p4Dose / p4Rate : 0;
+
+    let warning = '';
+    if (preload < 0) warning += '⚠️ Tubing buffer มากกว่า Tubing volume — Pre-load ติดลบ<br>';
+    if (p2Dose < 0)  warning += '⚠️ Phase 2 ติดลบ — ตรวจสอบ Total CM และ Pre-load<br>';
+    if (p3Dose < 0)  warning += '⚠️ Phase 3 ติดลบ — ตรวจสอบ Tubing volume<br>';
+    if (p4Dose < tube) warning += `⚠️ Phase 4 NSS (${p4Dose} mL) น้อยกว่า Tubing volume (${tube} mL) — อาจ flush ไม่หมด<br>`;
+    if (total < 3)   warning += '⚠️ Total CM ควรไม่ต่ำกว่า 3 mL<br>';
+
+    const cls = (syr) => syr === 'CM' ? 'cm' : 'ns';
+
+    document.getElementById('dp_output').innerHTML = `
+      <div class="result-item"><span class="result-label">Protocol</span><span class="result-value" style="font-size:14px">${protocolName}</span></div>
+      <div class="result-item"><span class="result-label">Pre-load (Tubing − Buffer)</span><span class="result-value">${preload.toFixed(2)}<span class="unit">mL</span></span></div>
+      <div class="result-item"><span class="result-label">Bolus to patient (${(BOLUS*100).toFixed(0)}%)</span><span class="result-value">${bolusCM.toFixed(2)}<span class="unit">mL</span></span></div>
+      <div class="result-item"><span class="result-label">Slow to patient (${(SLOW*100).toFixed(0)}%)</span><span class="result-value">${slowCM.toFixed(2)}<span class="unit">mL</span></span></div>
+      <div class="result-item"><span class="result-label">Slow rate</span><span class="result-value">${slowRate.toFixed(3)}<span class="unit">mL/sec</span></span></div>
+
+      <div class="dp-table">
+        <table>
+          <thead>
+            <tr><th>Phase</th><th>Syringe</th><th>Rate (ml/s)</th><th>Dose (ml)</th><th>Time (sec)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>${p1Label}</b></td><td class="${cls(p1Syr)}">${p1Syr}</td><td>${p1Rate.toFixed(2)}</td><td>${p1Dose.toFixed(2)}</td><td>${p1Time.toFixed(2)}</td></tr>
+            <tr><td><b>${p2Label}</b></td><td class="${cls(p2Syr)}">${p2Syr}</td><td>${p2Rate.toFixed(2)}</td><td>${p2Dose.toFixed(2)}</td><td>${p2Time.toFixed(2)}</td></tr>
+            <tr><td><b>${p3Label}</b></td><td class="${cls(p3Syr)}">${p3Syr}</td><td>${p3Rate.toFixed(3)}</td><td>${p3Dose.toFixed(2)}</td><td>${p3Time.toFixed(2)}</td></tr>
+            <tr><td><b>${p4Label}</b></td><td class="${cls(p4Syr)}">${p4Syr}</td><td>${p4Rate.toFixed(3)}</td><td>${p4Dose.toFixed(2)}</td><td>${p4Time.toFixed(2)}</td></tr>
+          </tbody>
+        </table>
+      </div>
+      ${warning ? `<div style="margin-top:12px;padding:10px 12px;background:rgba(244,67,54,0.15);border-left:3px solid #f44336;border-radius:6px;color:#ffb4b4;font-size:13px">${warning}</div>` : ''}
+    `;
+    document.getElementById('dp_result').classList.add('show');
+  }
+</script>
+</body>
+</html>
