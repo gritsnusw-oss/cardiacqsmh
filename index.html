@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cardiac team by QSMH</title>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>CARDIAC QSMH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:wght@600;700&display=swap">
 <style>
+  :root{color-scheme:dark}
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Segoe UI', 'Sarabun', Tahoma, sans-serif;
@@ -418,29 +418,430 @@
     .cat-card { max-width:100%; width:100%; padding:28px 20px; }
     #categoryDetail .layout-2col { padding:16px; }
   }
+
+  /* ───── Heart Anatomy 3D: original look, scoped to #heart ───── */
+  #heart.tab-content{padding:0;min-height:0}
+  #heart{--bg:#0b0f15;--panel:#121923;--panel2:#18212e;--line:#243044;--tx:#e6edf6;--mut:#8b9bb0;--acc:#4cc2ff;--red:#ff5a4f;--grn:#46d39a;
+    background:var(--bg);color:var(--tx);font:13px/1.45 system-ui,Segoe UI,Roboto,sans-serif}
+  #heart *{box-sizing:border-box}
+  #heart .h-grid{display:grid;grid-template-columns:270px 1fr 330px;height:max(640px,calc(100vh - 140px))}
+  #heart aside{background:var(--panel);overflow:auto;padding:12px 16px}
+  #heart #left{border-right:1px solid var(--line)}
+  #heart #right{border-left:1px solid var(--line)}
+  #heart h1{font-size:16px;margin:0 0 2px;font-weight:700;color:var(--tx)}
+  #heart .sub{color:var(--mut);font-size:12px;margin-bottom:10px}
+  #heart h2{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:16px 0 6px;font-weight:700;padding:0;border:0;display:block}
+  #heart h2::before{display:none}
+  #heart label.chk{display:flex;align-items:center;gap:8px;padding:3px 0;cursor:pointer;font-size:13px;color:var(--tx)}
+  #heart input[type=checkbox]{accent-color:var(--acc)}
+  #heart input[type=range]{width:100%;accent-color:var(--acc)}
+  #heart .row{display:flex;flex-wrap:wrap;gap:5px}
+  #heart button{background:var(--panel2);color:var(--tx);border:1px solid var(--line);border-radius:6px;padding:4px 9px;font:inherit;cursor:pointer;font-weight:400}
+  #heart button:hover{border-color:var(--acc);background:var(--panel2);color:var(--tx)}
+  #heart button.on{background:#12405a;border-color:var(--acc)}
+  #heart .chip{min-width:44px;text-align:center;position:relative;padding:4px 7px}
+  #heart .chip .st{position:absolute;top:-6px;right:-3px;font-size:11px;font-weight:700}
+  #heart .chip .st.up{color:var(--red)}#heart .chip .st.dn{color:#5aa9ff}
+  #heart .grp{color:var(--mut);font-size:11px;margin:8px 0 3px}
+  #heart #stage{position:relative;min-width:0;min-height:0}
+  #heart #stage canvas{display:block;width:100%;height:100%}
+  #heart #hint{position:absolute;left:12px;bottom:10px;color:var(--mut);font-size:12px;pointer-events:none;text-shadow:0 1px 3px #000}
+  #heart #tip{position:absolute;pointer-events:none;background:#000c;border:1px solid var(--line);padding:3px 7px;border-radius:5px;font-size:12px;display:none;white-space:nowrap}
+  #heart #views{position:absolute;top:10px;left:10px;display:flex;gap:5px;flex-wrap:wrap;z-index:2}
+  #heart #bull{width:100%;aspect-ratio:1;display:block;cursor:pointer}
+  #heart #ecg{width:100%;height:150px;display:block;border-radius:6px;background:#0a1118;border:1px solid var(--line)}
+  #heart #info{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 11px;margin:10px 0;min-height:110px;font-size:13px;line-height:1.45;color:var(--tx)}
+  #heart #info b.t{font-size:14px}
+  #heart .tag{display:inline-block;padding:0 7px;border-radius:9px;font-size:11px;margin:1px 2px 1px 0;border:1px solid var(--line)}
+  #heart .legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--mut)}
+  #heart .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+  #heart select{width:100%;background:var(--panel2);color:var(--tx);border:1px solid var(--line);border-radius:6px;padding:5px;font:inherit}
+  #heart .note{color:var(--mut);font-size:11px;margin-top:10px}
+  #heart #ecgctl{margin-top:10px}
+  #heart:fullscreen .h-grid{height:100vh}
+  #heart:fullscreen{overflow:auto}
+  .container.wide{max-width:none;backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(15,25,32,0.92)}
+  body.hwide{padding:8px}
+  @media(max-width:900px){
+    #heart .h-grid{display:flex;flex-direction:column;height:auto}
+    #heart #stage{height:62vh;flex:none}
+    #heart aside{border:0!important}
+  }
+
+  /* ───── Cine Timing 3D (Cardiac theme) ───── */
+  #timing .calc-card h2 { font-size: 20px; }
+  .ct-opts { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+  .ct-opt { flex: 1; min-width: 220px; padding: 12px 16px; background: rgba(0,0,0,0.3); border: 2px solid rgba(255,255,255,0.1); border-radius: 10px; color: #c9d1d9; cursor: pointer; font-size: 15px; font-weight: 700; transition: all 0.2s ease; font-family: inherit; text-align: center; }
+  .ct-opt small { display: block; font-size: 11px; font-weight: 400; opacity: 0.7; margin-top: 2px; }
+  .ct-opt:hover { background: rgba(255,107,129,0.15); border-color: rgba(255,107,129,0.4); }
+  .ct-opt.active { background: linear-gradient(135deg, #c41e3a, #8b0000); border-color: transparent; color: #fff; box-shadow: 0 4px 14px rgba(196,30,58,0.4); }
+  #timing input[type=range] { width: 100%; accent-color: #ff6b81; background: none; border: none; }
+  #timing select { width: auto; padding: 8px 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-size: 14px; font-family: inherit; }
+  #timing select option { background: #203a43; color: #fff; }
+  .ct-mini { margin-top: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #c9d1d9; padding: 7px 12px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s ease; }
+  .ct-mini:hover { background: rgba(255,107,129,0.15); border-color: rgba(255,107,129,0.4); color: #fff; }
+  .ct-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin: 6px 0 4px; }
+  .ct-kpi { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; border-top: 3px solid #5d6d7e; }
+  .ct-kpi .k { font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: rgba(255,255,255,0.55); font-weight: 700; }
+  .ct-kpi .v { font-size: 30px; font-weight: 700; color: #fff; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .ct-kpi .v small { font-size: 14px; font-weight: 400; color: rgba(255,255,255,0.6); margin-left: 4px; }
+  .ct-kpi .s { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 2px; }
+  .ct-kpi.ok { border-top-color: #aed581; } .ct-kpi.ok .v { color: #aed581; }
+  .ct-kpi.warn { border-top-color: #ffc107; } .ct-kpi.warn .v { color: #ffd54f; }
+  .ct-kpi.bad { border-top-color: #ff6b81; } .ct-kpi.bad .v { color: #ff6b81; }
+  #ct_stage { position: relative; height: 480px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); background: radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.07), rgba(0,0,0,0.4)); }
+  #ct_stage canvas { display: block; width: 100%; height: 100%; }
+  .ct-overlay { position: absolute; top: 12px; left: 14px; pointer-events: none; z-index: 2; text-shadow: 0 1px 4px #000; }
+  .ct-overlay .big { font-size: 26px; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; }
+  .ct-overlay .big.hold { color: #ff6b81; } .ct-overlay .big.free { color: #aed581; }
+  .ct-overlay .sm { font-size: 12.5px; color: rgba(255,255,255,0.75); margin-top: 2px; }
+  .ct-tip { position: absolute; pointer-events: none; background: rgba(0,0,0,0.85); border: 1px solid rgba(255,107,129,0.4); padding: 5px 9px; border-radius: 6px; font-size: 12px; display: none; white-space: nowrap; z-index: 3; }
+  .ct-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 10px 0 14px; }
+  .ct-controls .ct-mini { margin-top: 0; }
+  .ct-lbl { font-size: 13px; color: #c9d1d9; }
+  .ct-hint { font-size: 12px; color: rgba(255,255,255,0.45); }
+  #ct_tl { width: 100%; height: 170px; display: block; border-radius: 8px; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); }
+  .ct-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .ct-charts canvas { width: 100%; height: 220px; display: block; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); }
+  #timing .dp-table td { white-space: nowrap; }
+  @media (max-width: 768px) { #ct_stage { height: 360px; } .ct-charts { grid-template-columns: 1fr; } }
+
+  /* ───── Planning chain (light, step layout) ───── */
+  #overview.tab-content { background: #f3f5f7; color: #1f2d35; padding: 36px 44px 48px; font-family: 'IBM Plex Sans', 'IBM Plex Sans Thai', 'Sarabun', 'Segoe UI', sans-serif; }
+  #overview .pl-h { font: 700 30px/1.2 'Source Serif 4', Georgia, serif; color: #16242c; margin: 0 0 22px; }
+  .pl-chain { list-style: none; display: flex; flex-direction: column; gap: 16px; padding-left: 58px; }
+  .pl-step { position: relative; }
+  .pl-dot { position: absolute; left: -52px; top: 16px; width: 28px; height: 28px; border-radius: 50%; border: 4px solid #0b5c70; background: #f3f5f7; transition: all 0.2s ease; }
+  .pl-step:not(:last-child)::after { content: ''; position: absolute; left: -39.5px; top: 46px; bottom: -18px; width: 3px; background: #d4d9de; }
+  .pl-step.open .pl-dot { background: #0b5c70; box-shadow: 0 0 0 4px rgba(11,92,112,0.15); }
+  .pl-card { background: #fff; border: 1px solid #dde2e7; border-radius: 10px; overflow: hidden; }
+  .pl-head { display: block; width: 100%; text-align: left; background: transparent; border: none; padding: 16px 20px; cursor: pointer; font-family: inherit; color: inherit; }
+  .pl-head:hover { background: #fafbfc; }
+  .pl-title { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .pl-title b { font-size: 19px; font-weight: 600; color: #16242c; }
+  .pl-tag { font-family: 'IBM Plex Mono', Consolas, monospace; font-size: 12.5px; background: #d9ecf0; color: #0b5c70; padding: 2px 9px; border-radius: 5px; }
+  .pl-chev { margin-left: auto; color: #8a97a0; transition: transform 0.2s ease; font-size: 13px; }
+  .pl-step.open .pl-chev { transform: rotate(90deg); }
+  .pl-desc { margin-top: 8px; font-size: 15px; line-height: 1.6; color: #5b6770; }
+  .pl-desc b { color: #111; font-weight: 600; }
+  .pl-panel { display: none; border-top: 1px solid #e5e9ed; padding: 18px 20px 22px; background: #fbfcfd; }
+  .pl-step.open .pl-panel { display: block; }
+  .pl-views { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .pl-views button { background: #fff; border: 1px solid #cfd6dc; color: #35505b; border-radius: 999px; padding: 6px 14px; font-size: 13.5px; font-family: inherit; cursor: pointer; transition: all 0.15s ease; }
+  .pl-views button:hover { border-color: #0b5c70; }
+  .pl-views button.on { background: #0b5c70; border-color: #0b5c70; color: #fff; }
+  .pl-vt { font-size: 16px; font-weight: 600; color: #16242c; margin-bottom: 10px; }
+  .pl-img { background: #fff; border: 1px solid #dde2e7; border-radius: 8px; padding: 10px; display: flex; justify-content: center; }
+  .pl-img img { max-width: 100%; max-height: 620px; cursor: zoom-in; border-radius: 4px; }
+  .pl-img .placeholder { color: #8a97a0; padding: 30px; }
+  .pl-note { margin-top: 14px; font-size: 14.5px; line-height: 1.7; color: #46545d; }
+  .pl-note ul { margin: 6px 0 0 20px; } .pl-note li { margin-bottom: 4px; }
+  .pl-note b { color: #111; }
+  .pl-note .tip { margin-top: 10px; padding: 10px 14px; background: #fff6dd; border-left: 3px solid #e0a800; border-radius: 4px; color: #6b5200; font-size: 14px; }
+  .qq-card { margin-top: 26px; }
+  .qq-h { font: 700 26px/1.2 'Source Serif 4', Georgia, serif; color: #16242c; margin-bottom: 14px; }
+  .qq-box { background: #fff; border: 1px solid #dde2e7; border-radius: 10px; padding: 22px 24px; }
+  .qq-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; padding-bottom: 22px; border-bottom: 1px solid #e5e9ed; }
+  .qq-f label { display: block; font-size: 14.5px; color: #5b6770; margin-bottom: 8px; min-height: 42px; }
+  .qq-f input { width: 100%; height: 50px; padding: 0 14px; background: #fff; border: 1px solid #cfd6dc; border-radius: 8px; font: 400 16px 'IBM Plex Mono', Consolas, monospace; color: #16242c; }
+  .qq-f input:focus { outline: none; border-color: #0b5c70; box-shadow: 0 0 0 3px rgba(11,92,112,0.15); }
+  .qq-res { display: flex; align-items: flex-end; gap: 44px; flex-wrap: wrap; padding-top: 20px; }
+  .qq-l { font-size: 14.5px; color: #5b6770; margin-bottom: 4px; }
+  .qq-big { font: 400 46px/1.1 'IBM Plex Mono', Consolas, monospace; color: #16242c; }
+  .qq-mid { font: 400 26px/1.5 'IBM Plex Mono', Consolas, monospace; color: #16242c; }
+  .qq-badge { display: inline-block; padding: 8px 14px; border-radius: 6px; font-size: 15px; background: #d9ecf0; color: #0b5c70; margin-bottom: 8px; }
+  .qq-badge.none { background: #dff1e3; color: #226b36; }
+  .qq-badge.sig { background: #fbe0e0; color: #9b1c1c; }
+  .qq-badge.chk { background: #fff0cf; color: #7a5600; }
+  .qq-note { margin-top: 16px; font-size: 15px; line-height: 1.65; color: #5b6770; }
+  @media (max-width: 768px) {
+    #overview.tab-content { padding: 22px 16px 32px; }
+    .pl-chain { padding-left: 44px; } .pl-dot { left: -42px; width: 24px; height: 24px; } .pl-step:not(:last-child)::after { left: -31px; top: 40px; }
+    .qq-res { gap: 24px; }
+  }
+  .credit { max-width: 1200px; margin: 14px auto 0; text-align: center; font-size: 12px; color: rgba(255,255,255,0.5); }
+  body.hwide .credit { max-width: none; }
+
+  /* ───── Setting: phase explainer ───── */
+  .ct-defs { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 8px; }
+  .ct-def { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-left: 4px solid var(--c); border-radius: 10px; padding: 12px 14px; }
+  .ct-def .t { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 15px; font-weight: 700; color: #fff; }
+  .ct-def .t span { color: var(--c); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .ct-def .f { font-family: Consolas, 'IBM Plex Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.55); margin: 3px 0 6px; }
+  .ct-def p { font-size: 13px; line-height: 1.55; color: #c9d1d9; }
+  .ct-sec { color: #ff6b81; font-size: 15px; margin: 22px 0 10px; }
+  #ct_split { width: 100%; height: 240px; display: block; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); }
+  .ct-row { display: grid; grid-template-columns: 60px 1fr 80px; align-items: center; gap: 12px; }
+  .ct-val { text-align: right; font-variant-numeric: tabular-nums; color: #fff; font-weight: 600; }
+  .ct-status { font-size: 13px; color: #c9d1d9; }
+  #ct_stage { height: 440px; }
+  .ct-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 12.5px; color: #c9d1d9; margin-top: 10px; }
+  .ct-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  .ct-defs[hidden] { display: none; }
+  .ct-defbtn { margin: 0 0 14px; }
+  .ct-sub { font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.65); margin: -4px 0 10px; }
+  .ct-sub b { color: #fff; }
+  #ct_bh { width: 100%; height: 104px; display: block; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); }
+  @media (max-width: 768px) { #ct_stage { height: 340px; } #ct_split { height: 260px; } }
+  /* ───── header tools: shared HR + language ───── */
+  header { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .hdr-tools { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .hdr-hr { display: flex; align-items: center; gap: 6px; font-size: 14px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.25); border-radius: 10px; padding: 6px 10px; }
+  .hdr-hr input { width: 64px; padding: 4px 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.35); background: rgba(0,0,0,0.25); color: #fff; font-family: inherit; font-size: 15px; font-weight: 600; text-align: center; }
+  .hdr-hr input:focus { outline: 2px solid #fff; outline-offset: 1px; }
+  .lang { display: inline-flex; border: 1px solid rgba(255,255,255,0.4); border-radius: 8px; overflow: hidden; }
+  .lang-btn { background: transparent; border: 0; color: #fff; padding: 7px 13px; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; opacity: .75; }
+  .lang-btn:hover { opacity: 1; }
+  .lang-btn.on { background: #fff; color: #8b0000; opacity: 1; }
+  .rf-opts { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .rf-opt { background: #fff; border: 1px solid #cfd6dc; color: #35505b; border-radius: 999px; padding: 6px 14px; font-size: 13.5px; font-family: inherit; cursor: pointer; }
+  .rf-opt.on { background: #0b5c70; border-color: #0b5c70; color: #fff; }
+  .rf-where { font-size: 14px; color: #5b6770; margin-bottom: 14px; }
+  .qq-hs { font: 400 16px 'IBM Plex Sans', 'IBM Plex Sans Thai', sans-serif; color: #5b6770; }
+  .qq-res { row-gap: 18px; }
+  /* Thai mode: headings use the same face as the description text (the serif has no Thai glyphs) */
+  html[lang="th"] #overview .pl-h, html[lang="th"] .qq-h, html[lang="th"] .qq-hs { font-family: 'IBM Plex Sans Thai', 'IBM Plex Sans', 'Sarabun', 'Segoe UI', sans-serif; font-weight: 600; }
+  .hr-link { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.35); color: #fff; border-radius: 8px; padding: 7px 12px; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; opacity: .8; }
+  .hr-link:hover { opacity: 1; }
+  .hr-link.on { background: #fff; color: #8b0000; opacity: 1; }
+  .hdr-hr input:disabled { opacity: .45; cursor: not-allowed; }
 </style>
-</head>
-<body>
 <div class="container">
   <header>
-    <h1>Cardiac team by QSMH</h1>
-    <p>Anatomy &amp; Plane • Flow • Drug Calculator</p>
+    <div class="hdr-main">
+      <h1>CARDIAC QSMH</h1>
+      <p data-th="Anatomy &amp; Plane • Flow • คำนวณยา • Heart Anatomy 3D • การตั้งค่า">Anatomy &amp; Plane • Flow • Drug Calculator • Heart Anatomy 3D • Setting</p>
+    </div>
+    <div class="hdr-tools">
+      <label class="hdr-hr" for="g_hr"><span aria-hidden="true">♥</span> <span data-th="HR ผู้ป่วย">Patient HR</span> <input type="number" id="g_hr" min="30" max="200" step="1" value="72"> bpm</label>
+      <button type="button" class="hr-link" id="g_link" aria-pressed="true"></button>
+      <div class="lang" role="group" aria-label="Language"><button type="button" class="lang-btn" data-lang="en">EN</button><button type="button" class="lang-btn" data-lang="th">TH</button></div>
+    </div>
   </header>
 
   <div class="tabs">
-    <button class="tab-btn active" data-tab="overview">Overview MRI</button>
-    <button class="tab-btn" data-tab="calculator">Drug Calculator</button>
+    <button class="tab-btn active" data-tab="overview" data-th="การวางแผน">Planning</button>
+    <button class="tab-btn" data-tab="calculator" data-th="คำนวณยา">Drug Calculator</button>
+    <button class="tab-btn" data-tab="heart">Heart Anatomy 3D</button>
+    <button class="tab-btn" data-tab="timing" data-th="การตั้งค่า">Setting</button>
   </div>
 
   <div class="tab-content active" id="overview">
-    <div class="category-picker" id="categoryPicker">
-      <div class="cat-card" data-category="Localize" data-first="loc_2ch"><div class="cat-icon">📍</div><div class="cat-name">Localize</div><div class="cat-subtitle">การวาง Localizer</div><div class="cat-count">4 views</div><div class="cat-arrow">→</div></div>
-      <div class="cat-card" data-category="Cine" data-first="cine_2ch"><div class="cat-icon">🫀</div><div class="cat-name">Cine</div><div class="cat-subtitle">Anatomy &amp; Plane</div><div class="cat-count">9 views</div><div class="cat-arrow">→</div></div>
-      <div class="cat-card" data-category="Flow" data-first="pc_ao"><div class="cat-icon">📈</div><div class="cat-name">Flow</div><div class="cat-subtitle">Phase Contrast</div><div class="cat-count">11 views</div><div class="cat-arrow">→</div></div>
+    <h2 class="pl-h" data-th="การวางแผน (Planning)">Planning</h2>
+    <ol class="pl-chain" id="plChain"></ol>
+    <template id="qpqsTpl">
+      <div class="qq-card">
+        <h3 class="qq-h">Qp/Qs</h3>
+        <div class="qq-box">
+          <div class="qq-inputs">
+            <div class="qq-f"><label for="qq_p" data-th="Stroke volume ฝั่งปอด (Qp), MPA (mL)">Pulmonary stroke volume, MPA (mL)</label><input type="number" id="qq_p" value="78" min="0" step="0.1"></div>
+            <div class="qq-f"><label for="qq_s" data-th="Stroke volume ฝั่งร่างกาย (Qs), Ao (mL)">Systemic stroke volume, Ao (mL)</label><input type="number" id="qq_s" value="64" min="0" step="0.1"></div>
+            <div class="qq-f"><label for="qq_hr" data-th="อัตราการเต้นหัวใจ (bpm)">Heart rate (bpm)</label><input type="number" id="qq_hr" value="72" min="20" max="220" step="1"></div>
+          </div>
+          <div class="qq-res">
+            <div><div class="qq-l">Qp/Qs</div><div class="qq-big" id="qq_ratio">1.22</div></div>
+            <div><div class="qq-l">Qp / Qs (L/min)</div><div class="qq-mid" id="qq_flow">5.6 / 4.6</div></div>
+            <div><span class="qq-badge" id="qq_badge">Borderline shunt</span></div>
+          </div>
+        </div>
+        <p class="qq-note" data-th="ค่าด้านบนเป็นตัวอย่าง ให้แทนด้วยค่า flow ที่วัดได้จาก series ของผู้ป่วย เกณฑ์การแปลผล: ต่ำกว่า 1.2 ไม่มี shunt ที่มีนัยสำคัญ, 1.2 ถึง 1.5 ก้ำกึ่ง, มากกว่า 1.5 มักมีนัยสำคัญ">The values above are example numbers. Replace them with the flows measured in your series. Interpretation bands: below 1.2 no significant shunt, 1.2 to 1.5 borderline, above 1.5 usually significant.</p>
+      </div>
+    </template>
+    <template id="ecvTpl">
+      <div class="qq-card">
+        <h3 class="qq-h">ECV <span class="qq-hs">(extracellular volume)</span></h3>
+        <div class="qq-box">
+          <div class="qq-inputs">
+            <div class="qq-f"><label for="ecv_m1" data-th="Native T1 กล้ามเนื้อหัวใจ (ms)">Native T1 myocardium (ms)</label><input type="number" id="ecv_m1" value="1000" min="0" step="1"></div>
+            <div class="qq-f"><label for="ecv_m2" data-th="Post-contrast T1 กล้ามเนื้อหัวใจ (ms)">Post-contrast T1 myocardium (ms)</label><input type="number" id="ecv_m2" value="450" min="0" step="1"></div>
+            <div class="qq-f"><label for="ecv_b1" data-th="Native T1 เลือด (blood pool) (ms)">Native T1 blood pool (ms)</label><input type="number" id="ecv_b1" value="1600" min="0" step="1"></div>
+            <div class="qq-f"><label for="ecv_b2" data-th="Post-contrast T1 เลือด (blood pool) (ms)">Post-contrast T1 blood pool (ms)</label><input type="number" id="ecv_b2" value="300" min="0" step="1"></div>
+            <div class="qq-f"><label for="ecv_hct">Hematocrit (%)</label><input type="number" id="ecv_hct" value="42" min="0" max="99" step="0.1"></div>
+          </div>
+          <div class="qq-res">
+            <div><div class="qq-l">ECV</div><div class="qq-big" id="ecv_val">—</div></div>
+            <div><div class="qq-l" data-th="ΔR1 กล้ามเนื้อหัวใจ / เลือด (s⁻¹)">ΔR1 myocardium / blood (s⁻¹)</div><div class="qq-mid" id="ecv_dr">—</div></div>
+            <div><div class="qq-l">λ (partition coefficient)</div><div class="qq-mid" id="ecv_lam">—</div></div>
+            <div><span class="qq-badge" id="ecv_badge"></span></div>
+          </div>
+        </div>
+        <p class="qq-note" data-th="ECV = (1 − Hct) × ΔR1 กล้ามเนื้อหัวใจ ÷ ΔR1 เลือด โดย ΔR1 = 1/T1 หลังฉีด − 1/T1 ก่อนฉีด วาง ROI กล้ามเนื้อหัวใจและ blood pool ที่ตำแหน่ง slice เดียวกันทั้ง native และ post-contrast และใช้ค่า hematocrit ที่เจาะใกล้วันตรวจ ค่าด้านบนเป็นตัวอย่าง ค่าปกติขึ้นกับความแรงสนามแม่เหล็กและ sequence ควรเทียบกับค่าอ้างอิงของหน่วยงาน (มักอยู่ราว 22–29%)">ECV = (1 − Hct) × ΔR1 myocardium ÷ ΔR1 blood, where ΔR1 = 1/T1 post − 1/T1 native. Draw the myocardial and blood-pool ROIs at the same slice positions on the native and post-contrast maps, and use a hematocrit taken close to the scan. The values above are example numbers. Normal ranges depend on field strength and sequence, so compare with your local reference values (often about 22–29%).</p>
+      </div>
+    </template>
+    <template id="rfTpl">
+      <div class="qq-card">
+        <h3 class="qq-h">Regurgitation</h3>
+        <div class="qq-box">
+          <div class="rf-opts" id="rf_opts">
+            <button type="button" class="rf-opt on" data-v="ao">Aortic valve</button>
+            <button type="button" class="rf-opt" data-v="pa">Pulmonary valve</button>
+          </div>
+          <p class="rf-where" id="rf_where"></p>
+          <div class="qq-inputs">
+            <div class="qq-f"><label for="rf_f">Forward flow volume (mL/beat)</label><input type="number" id="rf_f" value="80" min="0" step="0.1"></div>
+            <div class="qq-f"><label for="rf_b">Backward flow volume (mL/beat)</label><input type="number" id="rf_b" value="12" min="0" step="0.1"></div>
+            <div class="qq-f"><label for="rf_hr" data-th="อัตราการเต้นหัวใจ (bpm)">Heart rate (bpm)</label><input type="number" id="rf_hr" value="72" min="30" max="200" step="1"></div>
+          </div>
+          <div class="qq-res">
+            <div><div class="qq-l">Regurgitant fraction</div><div class="qq-big" id="rf_val">—</div></div>
+            <div><div class="qq-l">Regurgitant volume (mL)</div><div class="qq-mid" id="rf_vol">—</div></div>
+            <div><div class="qq-l">Net forward volume (mL)</div><div class="qq-mid" id="rf_net">—</div></div>
+            <div><div class="qq-l">Regurgitant flow (L/min)</div><div class="qq-mid" id="rf_lmin">—</div></div>
+            <div><span class="qq-badge" id="rf_badge"></span></div>
+          </div>
+        </div>
+        <p class="qq-note" data-th="Regurgitant fraction = backward ÷ forward × 100 · Regurgitant volume = backward flow ต่อ 1 beat · Net forward volume = forward − backward ค่าด้านบนเป็นตัวอย่าง เกณฑ์โดยประมาณ: ต่ำกว่า 20% น้อย (mild), 20–40% ปานกลาง (moderate), มากกว่า 40% รุนแรง (severe) เกณฑ์การแบ่งระดับต่างกันตามลิ้นหัวใจและแนวทางแต่ละฉบับ ควรใช้ตามมาตรฐานการรายงานของหน่วยงาน">Regurgitant fraction = backward ÷ forward × 100. Regurgitant volume = backward flow per beat, and net forward volume = forward − backward. The values above are example numbers. Approximate bands: below 20% mild, 20–40% moderate, above 40% severe. Grading thresholds differ by valve and guideline, so follow your local reporting standard.</p>
+      </div>
+    </template>
+  </div>
+
+  <div class="tab-content" id="heart">
+<div class="h-grid">
+<aside id="left">
+ <h1>Heart Anatomy 3D</h1>
+ <div class="sub">AHA 17-segment · coronaries · ECG leads</div>
+
+ <h2>Layers</h2>
+ <label class="chk"><input type="checkbox" id="L_lv" checked> LV – 17 AHA segments</label>
+ <label class="chk"><input type="checkbox" id="L_nums" checked> Segment numbers</label>
+ <label class="chk"><input type="checkbox" id="L_cor" checked> Coronary arteries</label>
+ <label class="chk"><input type="checkbox" id="L_rv" checked> RV, atria &amp; great vessels</label>
+ <label class="chk"><input type="checkbox" id="L_ecg" checked> ECG electrodes</label>
+ <label class="chk"><input type="checkbox" id="L_chest" checked> Chest wall</label>
+ <label class="chk"><input type="checkbox" id="L_beat" checked> Heartbeat</label>
+
+ <h2>LV colouring</h2>
+ <div class="row" id="colorBtns">
+  <button data-m="segment" class="on">Segments</button>
+  <button data-m="territory">Coronary territory</button>
+  <button data-m="plain">Plain</button>
+ </div>
+ <h2>Heart opacity</h2>
+ <input type="range" id="opac" min="25" max="100" value="95">
+
+ <h2>Coronary occlusion (STEMI demo)</h2>
+ <select id="occ">
+  <option value="none">None</option>
+  <option value="LAD">LAD occlusion</option>
+  <option value="LCx">LCx occlusion</option>
+  <option value="RCA">RCA occlusion (distal to RV branches)</option>
+  <option value="RCAp">Proximal RCA (inferior + RV infarct)</option>
+ </select>
+ <div class="note">Occluding a vessel marks the affected AHA segments and shows ST elevation (↑) / reciprocal depression (↓) on the leads.</div>
+
+ <h2>ECG leads</h2>
+ <div class="grp">Precordial</div><div class="row" id="g_pre"></div>
+ <div class="grp">Right-sided</div><div class="row" id="g_rt"></div>
+ <div class="grp">Posterior</div><div class="row" id="g_post"></div>
+ <div class="grp">Limb</div><div class="row" id="g_limb"></div>
+ <div class="note">Educational model, schematic anatomy. Not for clinical decision-making.</div>
+</aside>
+
+<main id="stage">
+ <div id="views"></div>
+ <div id="tip"></div>
+ <div id="hint">Drag to rotate · scroll to zoom · click a segment, artery or electrode</div>
+</main>
+
+<aside id="right">
+ <canvas id="bull" width="600" height="600"></canvas>
+ <div class="legend" id="legend"></div>
+ <div id="info"></div>
+ <canvas id="ecg"></canvas>
+ <div id="ecgctl">
+  <div class="row" style="align-items:center">
+   <button id="play" class="on" title="Play / pause">❚❚ Pause</button>
+   <button id="mode" title="Scrolling strip or monitor-style sweep">Mode: Scroll</button>
+   <span style="margin-left:auto"><b id="bpmOut">72</b> <span class="sub">bpm</span></span>
+  </div>
+  <label class="sub" for="bpm" style="display:block;margin:8px 0 2px">Patient's heart rate</label>
+  <input type="range" id="bpm" min="30" max="180" value="72">
+  <div class="row" style="margin-top:6px">
+   <button data-bpm="45">Bradycardia 45</button>
+   <button data-bpm="72">Normal 72</button>
+   <button data-bpm="130">Tachycardia 130</button>
+  </div>
+  <div id="rrout" class="note"></div>
+ </div>
+</aside>
+</div>
+</div>
+
+    <div class="tab-content" id="timing">
+    <div class="calc-card">
+      <h2>PARAMETER</h2>
+
+      <div class="ct-opts" id="ct_gate">
+        <button class="ct-opt active" data-gate="1">Retrospective gating</button>
+        <button class="ct-opt" data-gate="p">Prospective triggering</button>
+      </div>
+
+      <div class="input-grid">
+        <div class="input-group"><label for="ct_hr" data-th="อัตราการเต้นหัวใจ (bpm)">Heart rate (bpm)</label><input type="number" id="ct_hr" value="72" min="30" max="200" step="1"><input type="range" id="ct_hrr" min="30" max="180" value="72" style="margin-top:8px;padding:0"></div>
+        <div class="input-group"><label for="ct_tr">TR (ms)</label><input type="number" id="ct_tr" value="3" min="1" max="10" step="0.1"></div>
+        <div class="input-group"><label for="ct_vps">Views per segment (VPS)</label><input type="number" id="ct_vps" value="12" min="1" max="60" step="1"></div>
+        <div class="input-group"><label for="ct_target" data-th="Temporal res. ที่ต้องการ (ms)">Target temporal res. (ms)</label><input type="number" id="ct_target" value="40" min="10" max="120" step="1"><button class="ct-mini" id="ct_setvps" type="button" data-th="ปรับ VPS">Adjust VPS</button></div>
+        <div class="input-group" id="ct_trigg" style="display:none"><label for="ct_trig">Trigger window (%)</label><input type="number" id="ct_trig" value="10" min="0" max="49" step="1"></div>
+        <div class="input-group"><label for="ct_nrec">Phases to reconstruct</label><input type="number" id="ct_nrec" placeholder="auto" min="1" max="200" step="1"></div>
+        <div class="input-group"><label for="ct_ny">Phase-encode matrix (lines)</label><input type="number" id="ct_ny" value="160" min="32" max="512" step="1"></div>
+        <div class="input-group"><label for="ct_fov">Phase FOV (%)</label><input type="number" id="ct_fov" value="100" min="40" max="100" step="5"></div>
+        <div class="input-group"><label for="ct_R">Parallel imaging factor (R)</label><input type="number" id="ct_R" value="2" min="1" max="6" step="0.5"></div>
+        <div class="input-group"><label for="ct_sbh" data-th="จำนวน slice ต่อการกลั้นหายใจ">Slices per breath-hold</label><input type="number" id="ct_sbh" value="1" min="1" max="6" step="1"></div>
+        <div class="input-group"><label for="ct_nsl" data-th="จำนวน slice ทั้งหมด (SAX stack)">Total slices (SAX stack)</label><input type="number" id="ct_nsl" value="10" min="1" max="30" step="1"></div>
+        <div class="input-group"><label for="ct_rest" data-th="พักระหว่างการกลั้นหายใจ (s)">Rest between breath-holds (s)</label><input type="number" id="ct_rest" value="8" min="0" max="60" step="1"></div>
+      </div>
+
+      <div class="ct-kpis" id="ct_kpis"></div>
+      <div class="result-box show" id="ct_details"><h3 data-th="รายละเอียดการคำนวณ">Calculation details</h3><div id="ct_out"></div></div>
+      <div id="ct_warn"></div>
     </div>
-    <div id="categoryDetail">
-      <div class="detail-header"><button class="btn-back" id="btnBack">← กลับ</button><div><div class="detail-header-title" id="detailTitle"></div><div class="detail-header-sub" id="detailSub"></div></div></div>
-      <div class="layout-2col"><div class="view-list" id="viewList"></div><div class="view-display"><div class="breadcrumb" id="viewBreadcrumb"></div><h2 id="viewTitle"></h2><div class="view-image" id="viewImage"><span class="placeholder">Loading...</span></div><div class="view-description" id="viewDesc"></div></div></div>
+
+    <div class="calc-card" style="margin-top:20px">
+      <h2 data-th="แผนภาพ 3D">3D diagram</h2>
+      <p class="subtitle">RR interval → Cardiac phase → TR</p>
+      <button class="ct-mini ct-defbtn" id="ct_defbtn" type="button" aria-expanded="false" aria-controls="ct_defs">ⓘ Show definitions</button>
+      <div class="ct-defs" id="ct_defs" hidden></div>
+
+      <h3 class="ct-sec" data-th="1 RR interval แบ่งเป็น cardiac phases">One RR interval, divided into cardiac phases</h3>
+      <canvas id="ct_split"></canvas>
+
+      <h3 class="ct-sec" data-th="Cardiac phases แบบ 3D">Cardiac phases in 3D</h3>
+      <div class="ct-row">
+        <label for="ct_phase" class="ct-lbl">Phase</label>
+        <input type="range" id="ct_phase" min="1" max="25" value="1">
+        <span class="ct-val" id="ct_phaseOut">1 / 25</span>
+      </div>
+      <div class="ct-controls">
+        <button class="ct-mini" id="ct_play" type="button">▶ Play phase by phase</button>
+        <span class="ct-status" id="ct_status"></span>
+      </div>
+      <div id="ct_stage"><div class="ct-tip" id="ct_tip"></div></div>
+      <div class="ct-legend">
+        <span><i style="background:#8b80e0"></i><span data-th="1 phase (ความหนา = temporal resolution)">1 phase (thickness = temporal resolution)</span></span>
+        <span><i style="background:#f0a030"></i><span data-th="phase ที่เลือก">Selected phase</span></span>
+        <span><i style="background:#e0552f"></i><span data-th="ขนาดห้องหัวใจ">Heart chamber size</span></span>
+        <span><i style="background:#ff5a5a"></i>ECG / R wave</span>
+      </div>
+
+      <h3 class="ct-sec" data-th="การกลั้นหายใจ (Breath-hold)">Breath-hold</h3>
+      <p class="ct-sub" id="ct_bhsub"></p>
+      <canvas id="ct_bh"></canvas>
+      <div class="ct-controls">
+        <button class="ct-mini" id="ct_bhplay" type="button">▶ Start breath-hold</button>
+        <span class="ct-status" id="ct_bhtxt"></span>
+      </div>
+    </div>
+
+    <div class="calc-card" style="margin-top:20px">
+      <h2 data-th="Views per segment — k-space fill ต่อ heartbeat">Views per segment — k-space fill per heartbeat</h2>
+      <div class="dp-table" style="max-height:300px;overflow:auto"><table id="ct_table"></table></div>
+    </div>
+
+    <div class="calc-card" style="margin-top:20px">
+      <h2 data-th="ผลของ Heart rate ต่อ Breath-hold และจำนวน Phase">Effect of Heart rate on Breath-hold and number of Phases</h2>
+      <p class="subtitle" data-th="RR สั้นลง (HR สูง) → breath-hold สั้นลง แต่จำนวน phase ต่อ RR ลดลง">Shorter RR (higher HR) → shorter breath-hold, but fewer phases per RR.</p>
+      <div class="ct-charts"><canvas id="ct_ch1"></canvas><canvas id="ct_ch2"></canvas></div>
+      <div class="note-box" data-th="<b>เงื่อนไข :</b> ค่าที่ได้เป็นการประมาณเพื่อการเรียนรู้ เครื่องจริงมี overhead เพิ่ม (เช่น ECG detection และ rounding) ผลจึงอาจต่างเล็กน้อย"><b>Conditions :</b> These values are approximations for learning purposes. Actual scanners have additional overhead (e.g., ECG detection and rounding), so results may differ slightly.</div>
     </div>
   </div>
 
@@ -454,29 +855,29 @@
     <div class="calc-panel active" id="adenosine">
       <div class="calc-card">
         <h2>Adenosine Stress</h2>
-        <p class="subtitle"> Adenosine สำหรับ stress test (มี 2 dose rates)</p>
+        <p class="subtitle" data-th="Adenosine สำหรับ stress test (มี 2 dose rates)">Adenosine for stress testing (two dose rates)</p>
 
         <div class="rate-selector">
-          <button class="rate-btn active" data-rate="140" onclick="selectRate(140)">Rate 140 <small>(3.5 นาที)</small></button>
-          <button class="rate-btn" data-rate="210" onclick="selectRate(210)">Rate 210 <small>(2 นาที)</small></button>
+          <button class="rate-btn active" data-rate="140" onclick="selectRate(140)" data-th="Rate 140 <small>(3.5 นาที)</small>">Rate 140 <small>(3.5 min)</small></button>
+          <button class="rate-btn" data-rate="210" onclick="selectRate(210)" data-th="Rate 210 <small>(2 นาที)</small>">Rate 210 <small>(2 min)</small></button>
         </div>
 
         <div class="input-grid">
-          <div class="input-group"><label>น้ำหนักผู้ป่วย (kg)</label><input type="number" id="ade_weight" placeholder="เช่น 70" step="0.1" oninput="calcAdenosine()"></div>
+          <div class="input-group"><label data-th="น้ำหนักผู้ป่วย (kg)">Patient weight (kg)</label><input type="number" id="ade_weight" placeholder="e.g. 70" data-th-ph="เช่น 70" step="0.1" oninput="calcAdenosine()"></div>
           <div class="input-group"><label>Dose rate (mcg/kg/min)</label><input type="number" id="ade_rate" value="140" step="1" readonly></div>
-          <div class="input-group"><label>ระยะเวลา (min)</label><input type="number" id="ade_time" value="3.5" step="0.1" readonly></div>
+          <div class="input-group"><label data-th="ระยะเวลา (min)">Duration (min)</label><input type="number" id="ade_time" value="3.5" step="0.1" readonly></div>
         </div>
 
-        <button class="btn-calc" onclick="calcAdenosine()">คำนวณ</button>
+        <button class="btn-calc" onclick="calcAdenosine()" data-th="คำนวณ">Calculate</button>
 
-        <div class="result-box" id="ade_result"><h3>ผลการคำนวณ</h3><div id="ade_output"></div></div>
+        <div class="result-box" id="ade_result"><h3 data-th="ผลการคำนวณ">Results</h3><div id="ade_output"></div></div>
       </div>
     </div>
 
     <div class="calc-panel" id="perfusion">
       <div class="calc-card">
         <h2>Perfusion</h2>
-        <p class="subtitle">คำนวณขนาดยา Gadovist สำหรับ perfusion imaging</p>
+        <p class="subtitle" data-th="คำนวณขนาดยา Gadovist สำหรับ perfusion imaging">Gadovist dose for perfusion imaging</p>
 
         <div class="rate-selector">
           <button class="rate-btn active" data-pfactor="0.15" onclick="selectPerfMode(0.15)">Perfusion only <small>(0.15 × BW)</small></button>
@@ -484,33 +885,33 @@
         </div>
 
         <div class="input-grid">
-          <div class="input-group"><label>น้ำหนักผู้ป่วย (kg)</label><input type="number" id="perf_weight" placeholder="เช่น 70" step="0.1" oninput="calcPerfusion()"></div>
+          <div class="input-group"><label data-th="น้ำหนักผู้ป่วย (kg)">Patient weight (kg)</label><input type="number" id="perf_weight" placeholder="e.g. 70" data-th-ph="เช่น 70" step="0.1" oninput="calcPerfusion()"></div>
           <div class="input-group"><label>Factor</label><input type="number" id="perf_factor" value="0.15" step="0.001" readonly></div>
         </div>
 
-        <button class="btn-calc" onclick="calcPerfusion()">คำนวณ</button>
+        <button class="btn-calc" onclick="calcPerfusion()" data-th="คำนวณ">Calculate</button>
 
-        <div class="result-box" id="perf_result"><h3>ผลการคำนวณ</h3><div id="perf_output"></div></div>
+        <div class="result-box" id="perf_result"><h3 data-th="ผลการคำนวณ">Results</h3><div id="perf_output"></div></div>
       </div>
     </div>
 
     <div class="calc-panel" id="dualphase">
       <div class="calc-card">
         <h2>Dual Phase MRA — Contrast Calculator</h2>
-        <p class="subtitle">Bolus (Fast) + Slow infusion — เลือก protocol อัตโนมัติตามขนาด Total CM</p>
+        <p class="subtitle" data-th="Bolus (Fast) + Slow infusion — เลือก protocol อัตโนมัติตามขนาด Total CM">Bolus (fast) + slow infusion: the protocol is chosen automatically from the total CM</p>
 
         <div class="input-grid">
-          <div class="input-group"><label>Total amount of CM (ml)</label><input type="number" id="dp_total" placeholder="เช่น 20" min="3" step="0.1" oninput="calcDualPhase()"></div>
-          <div class="input-group"><label>Predicted scan length (sec)</label><input type="number" id="dp_scan" placeholder="เช่น 100" step="1" oninput="calcDualPhase()"></div>
-          <div class="input-group"><label>Tubing volume (ml)</label><input type="number" id="dp_tube" value="7.5" step="0.1" oninput="calcDualPhase()"></div>
+          <div class="input-group"><label data-th="ปริมาณ CM ทั้งหมด (ml)">Total amount of CM (ml)</label><input type="number" id="dp_total" placeholder="e.g. 20" data-th-ph="เช่น 20" min="3" step="0.1" oninput="calcDualPhase()"></div>
+          <div class="input-group"><label data-th="ระยะเวลาสแกนโดยประมาณ (sec)">Predicted scan length (sec)</label><input type="number" id="dp_scan" placeholder="e.g. 100" data-th-ph="เช่น 100" step="1" oninput="calcDualPhase()"></div>
+          <div class="input-group"><label data-th="ปริมาตรในสาย (Tubing volume) (ml)">Tubing volume (ml)</label><input type="number" id="dp_tube" value="7.5" step="0.1" oninput="calcDualPhase()"></div>
           <div class="input-group"><label>Tubing buffer (ml)</label><input type="number" id="dp_buffer" value="1.5" step="0.1" oninput="calcDualPhase()"></div>
           <div class="input-group"><label>Bolus %</label><input type="number" id="dp_bpct" value="0.6" min="0" max="1" step="0.05" oninput="calcDualPhase()"></div>
         </div>
 
-        <button class="btn-calc" onclick="calcDualPhase()">คำนวณ</button>
+        <button class="btn-calc" onclick="calcDualPhase()" data-th="คำนวณ">Calculate</button>
 
         <div class="result-box" id="dp_result">
-          <h3>ผลการคำนวณ</h3>
+          <h3 data-th="ผลการคำนวณ">Results</h3>
           <div id="dp_output"></div>
         </div>
       </div>
@@ -518,73 +919,114 @@
   </div>
 </div>
 
+<div class="credit" data-th="โดย กฤษนัส วรรณใหม่ นักรังสีการแพทย์">by Gritsnus Wannamai, Radiologic Technologist</div>
+
 <div class="lightbox" id="lightbox" onclick="this.classList.remove('show')">
   <img id="lightboxImg" src="" alt="">
 </div>
 
 <script>
-  // ทุก view ใช้รูปไหน — มาจาก PNG ที่อยู่ในโฟลเดอร์เดียวกัน
+  /* ───── Language (TH/EN) + shared heart rate ───── */
+  window.LANG = (() => { try { return localStorage.getItem('cq_lang') === 'th' ? 'th' : 'en'; } catch (e) { return 'en'; } })();
+  window.L = (en, th) => (window.LANG === 'th' ? th : en);
+  function applyLang() {
+    document.documentElement.lang = window.LANG;
+    document.querySelectorAll('[data-th]').forEach(el => {
+      if (el.dataset.en === undefined) el.dataset.en = el.innerHTML;
+      el.innerHTML = window.LANG === 'th' ? el.dataset.th : el.dataset.en;
+    });
+    document.querySelectorAll('[data-th-ph]').forEach(el => {
+      if (el.dataset.enPh === undefined) el.dataset.enPh = el.placeholder;
+      el.placeholder = window.LANG === 'th' ? el.dataset.thPh : el.dataset.enPh;
+    });
+    document.querySelectorAll('.lang-btn').forEach(b => { const on = b.dataset.lang === window.LANG; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
+  }
+  function setLang(l) {
+    window.LANG = l; try { localStorage.setItem('cq_lang', l); } catch (e) {}
+    applyLang(); document.dispatchEvent(new Event('langchange'));
+  }
+  window.HR = {
+    v: 72,
+    linked: (() => { try { return localStorage.getItem('cq_hrlink') !== '0'; } catch (e) { return true; } })(),
+    // a change in one place reaches the others only while the heart rate is linked
+    set(v, src) {
+      if (!this.linked) return;
+      v = Math.round(+v); if (!(v >= 30 && v <= 200) || v === this.v) return;
+      this.v = v; document.dispatchEvent(new CustomEvent('hrchange', { detail: { v, src } }));
+    },
+    // re-linking pushes one value to every page
+    sync(v) {
+      v = Math.round(+v); if (!(v >= 30 && v <= 200)) v = this.v;
+      this.v = v; document.dispatchEvent(new CustomEvent('hrchange', { detail: { v, src: 'link' } }));
+    },
+  };
+
+  // ทุก view ใช้รูปไหน — มาจาก JPG ที่อยู่ในโฟลเดอร์เดียวกัน
   const viewData = {
     // Localize → page 21
-    "loc_2ch":   { title: "Localize 2CH",  image: "loc_4ch.png", desc: `วาง plane ผ่าน <b>กึ่งกลาง Valve</b> ถึง <b>Apex</b> <div class="tip">💡 Shimming → scan plane ไหน ให้วางที่ Plane นั้น + symmetric volume ใน Heart </div>` },
-    "loc_4ch":   { title: "Localize 4CH",  image: "loc_4ch.png", desc: `จาก Localize 2CH → วาง plane จาก Valve → Apex  เพื่อให้ได้ 4-chamber view` },
-    "loc_sax":   { title: "Localize SAX",  image: "loc_sax.png", desc: `วาง stack ของ plane เอียงตาม Myocardium (ตั้งฉากกับ long axis ทั้งจาก 2CH และ 4CH) ใช้สำหรับสร้าง Short Axis stack` },
-    "loc_3ch":   { title: "Localize 3CH",  image: "loc_3ch.png", desc: `จาก Localize SAX → วาง plane ตัดผ่านกึ่งกลาง aortic valve  ` },
+    "loc_2ch":   { title: "Localize 2CH",  image: "loc_2ch.jpg", desc: `วาง plane ผ่าน <b>กึ่งกลาง Valve</b> ถึง <b>Apex</b> <div class="tip">💡 Shimming → scan plane ไหน ให้วางที่ Plane นั้น + symmetric volume ใน Heart </div>` },
+    "loc_4ch":   { title: "Localize 4CH",  image: "loc_4ch.jpg", desc: `จาก Localize 2CH → วาง plane จาก Valve → Apex  เพื่อให้ได้ 4-chamber view` },
+    "loc_sax":   { title: "Localize SAX",  image: "loc_sax.jpg", desc: `วาง stack ของ plane เอียงตาม Myocardium (ตั้งฉากกับ long axis ทั้งจาก 2CH และ 4CH) ใช้สำหรับสร้าง Short Axis stack` },
+    "loc_3ch":   { title: "Localize 3CH",  image: "loc_3ch.jpg", desc: `จาก Localize SAX → วาง plane ตัดผ่านกึ่งกลาง aortic valve  ` },
 
 
 
     // Cine 2CH/4CH → page 22
-    "cine_2ch":  { title: "Cine 2CH", image: "cine_2ch.png", desc: `2 Chamber view (LAX) → Lt.Ventricle และ Lt.Atrium ใช้ประเมิน anterior และ inferior wall วาง plane จาก<div class="tip"><ul><li>💡 Axial Fiesta: ผ่านกึ่งกลาง valve → apex </li><li> SAX: ขนานกับ Apex<b> ห้ามโดน Atrioventricular septum</b></li></ul></div>` },
+    "cine_2ch":  { title: "Cine 2CH", image: "cine_2ch.jpg", desc: `2 Chamber view (Vertical LAX view) → ตัดผ่าน Anterior & Inferior wall เพื่อประเมิน Lt.Ventricle กับ Lt.Atrium <div class="tip"><ul><li>  Axial Fiesta: ผ่านกึ่งกลาง Atrioventricular valve → apex </li><li> SAX: ขนานกับ Apex<b> ห้ามโดน Atrioventricular septum</b></li></ul></div>` },
 
-    "cine_4ch":  { title: "Cine 4CH", image: "cine_4ch.png", desc: `4 Chamber view (LAX) → Lt.Ventricle Lt.Atrium Rt.Ventricle Rt.Atrium วาง plane จาก <div class="tip"><ul><li> SAX: ตั้งฉากกับ Apex</li><li>ระวัง: ห้ามโดน Aortic Valve</li></ul></div>` },
+    "cine_4ch":  { title: "Cine 4CH", image: "cine_4ch.jpg", desc: `4 Chamber view (LAX) → Lt.Ventricle Lt.Atrium Rt.Ventricle Rt.Atrium  <div class="tip"><ul><li> ตัดจาก RV Corner → Anterolateral wall </li><li>ระวัง: ห้ามโดน Aortic Valve</li></ul></div>` },
 
     // Cine SAX/3CH → page 23
-    "cine_sax":  { title: "Cine SAX", image: "cine_sax.png", desc: `Short Axis stack (SAX) ของ LV ใช้คำนวณ LV volume, EF วาง plane จาก <div class="tip">💡4CH & 2CH cine:<b>ตั้งฉากกับ</b> Bicuspid Valve และ Myocardium</div>` },
-    "cine_3ch":  { title: "Cine 3CH", image: "cine_3ch.png", desc: `3 Chamber view (LAX) → Lt.Ventricle, Lt.Atrium, Aortic valve และ Aorta วาง plane จาก<div class="tip">💡 SAX cine: ตัดผ่าน <b>Aortic Valve และ Left Ventricle</b></div>` },
+    "cine_sax":  { title: "Cine SAX", image: "cine_sax.jpg", desc: `Short Axis stack (SA) ใช้คำนวณ LV volume, Ejection Fraction (EF)  <div class="tip">💡4CH & 2CH cine:<b>ตั้งฉากกับ</b> Atrioventricular Valve กับ LV septum</div>` },
+    "cine_3ch":  { title: "Cine 3CH", image: "cine_3ch.jpg", desc: `3 Chamber view (LAX) → Lt.Ventricle, Lt.Atrium, Aortic valve และ Aorta <div class="tip">💡 SAX cine: ตัดผ่าน <b>Aortic Valve และ Inferolateral wall ของ Lt.ventricle</b></div>` },
 
     // Cine 2CH RV / Aortic Valve → page 24
-    "cine_2chrv":{ title: "Cine 2CH Rt. Ventricle", image: "cine_2chrv.png", desc: `2-Chamber view (LAX) → Rt.Atrium และ Rt.Ventricle วาง Plane จาก <div class="tip">💡<ul><li> Cine SAX: กึ่งกลาง Rt.ventricle </li><li>Cine 4CH: ขนานกับ septum </li></ul></div>` },
-    "aov_view":  { title: "Aortic Valve (Cine)", image: "aortic_valve.png", desc: `วาง stack ของ plane ผ่านระดับ aortic valve โดยใช้ Cine 3CH และ Coronal Fiesta เป็น reference<div class="tip">💡<ul><li>วาง 1-3 slices ขนานกับ aortic valve</li><li>ดู valve area ใน systole &amp; diastole</li></ul></div>` },
+    "cine_2chrv":{ title: "Cine 2CH Rt. Ventricle", image: "cine_2chrv.jpg", desc: `2-Chamber view (Vertical LAX) → Rt.Atrium และ Rt.Ventricle ` },
+    "aov_view":  { title: "Aortic Valve ", image: "aortic_valve.jpg", desc: `Aortic Valve <div class="tip"><ul><li>วาง 1-3 slices คลุม aortic valve</li><li>ดู Valve area ใน systole &amp; diastole</li></ul></div>` },
 
     // In & Out-flow tract → page 25
-    "cine_lvot": { title: "Cine LVOT", image: "lvot.png", desc: `Left Ventricular Outflow Tract view (ดู aortic valve และ subaortic area)<ul><li>ดึง Coronal มา → ตั้ง <b>FOV เป็น Coronal</b></li><li>วางจาก Cine 3CH</li></ul><div class="tip">⚠️ ระวัง Valve สะบัด — ให้ดูทั้ง Systolic &amp; Diastolic</div>` },
-    "cine_rvot": { title: "Cine RVOT", image: "rvot.png", desc: `Right Ventricular Outflow Tract view<ul><li>วางจาก Axial FIESTA และ RVIT</li><li>ตั้ง <b>FOV เป็น Sagittal</b></li></ul>` },
+    "cine_lvot": { title: "Cine LVOT", image: "lvot.jpg", desc: `Left Ventricular Outflow Tract view (ดู Aortic valve และ subaortic area)<ul><li> FOV Coronal</li><li>วางจาก Cine 3CH</li></ul>` },
+    "cine_rvot": { title: "Cine RVOT", image: "rvot.jpg", desc: `Right Ventricular Outflow Tract view<ul><li>วางจาก Axial FIESTA และ RVIT</li><li>วางเส้นขนานกับ <b>Pulmonary trunk</b></li></ul>` },
 
     // How to RVIT / Mitral Valve → page 26
-    "rvit":      { title: "RVIT (Right Ventricular Inflow Tract)", image: "rvit.png", desc: `ดู Tricuspid valve และ inflow ของ RV<ul><li>วางจาก SAX และ 4CH</li><li>ตัดผ่าน RA → RV ผ่าน tricuspid valve</li></ul>` },
+    "cine_rvit":      { title: "Cine RVIT ", image: "rvit.jpg", desc: `ดู Atrioventricular valve และ Inflow ของ Rt.ventricle<ul><li>วางจาก SAX และ 4CH</li><li>ตัดผ่าน RA → RV ผ่าน tricuspid valve</li></ul>` },
 
     // Pulmonic Valve → page 27
     // Phase contrast venc table → page 28
-    "venc_table":{ title: "Phase Contrast — Venc Reference Table", image: "venc_table.png", desc: `ตาราง Velocity Encoding (cm/s) สำหรับแต่ละจุดที่ทำ phase contrast<div class="tip">• เอาไปทำ Qp/Qs Flow ต่อ<br>• Check Aliasing Artifact<br>• ถ้ามี aliasing → เพิ่ม Velocity ทีละ 20</div>` },
+    "venc_table":{ title: "Phase Contrast — Venc Reference Table", image: "venc_table.jpg", desc: `ตาราง Velocity Encoding (cm/s) สำหรับแต่ละจุดที่ทำ phase contrast<div class="tip">• เอาไปทำ Qp/Qs Flow ต่อ<br>• Check Aliasing Artifact<br>• ถ้ามี aliasing → เพิ่ม Velocity ทีละ 20</div>` },
 
     // PC AO → page 29
-    "pc_ao":     { title: "PC AO (Aorta)", image: "pc_ao.png", desc: `Phase contrast ที่ Aorta<ul><li>วาง plane ตั้งฉากกับ ascending aorta</li></ul><div class="tip">Venc = <b>150 cm/s</b></div>` },
-    "pc_ao_cc":  { title: "PC AO Candy Cane View", image: "pc_ao_candy_cane.png", desc: `Phase contrast Aorta "Candy cane view" จาก sagittal-oblique เห็น aortic arch <div class="tip">Venc = <b>150 cm/s</b></div>` },
+    "pc_ao":     { title: "PC AO (Aorta)", image: "pc_ao.jpg", desc: `Phase contrast Aorta<ul><li> ตั้งฉากกับ Ascending aorta เหนือ Aortic valve</li></ul><div class="tip">Venc = <b>150 cm/s</b></div>` },
+    "pc_ao_cc":  { title: "PC AO Candy Cane View", image: "pc_ao_candy_cane.jpg", desc: `Phase contrast Aorta "Candy cane view" <li>Sagittal-oblique view for aortic arch</li> <div class="tip">Venc = <b>150 cm/s</b></div>` },
 
     // PC PA / PC RPA → page 30
-    "pc_pa":     { title: "PC PA (Main Pulmonary Artery)", image: "pc_pa.png", desc: `Phase contrast ที่ MPA สำหรับวัด pulmonary flow<ul><li>วางจาก RVOT และ axial Fiesta ตั้งฉากกับ MPA</li><li>ตั้งฉากกับ MPA</li></ul><div class="tip">Venc = <b>150 cm/s</b> | นำไปใช้คำนวณ Qp/Qs ต่อ</div>` },
-    "pc_rpa":    { title: "PC RPA (Right Pulmonary Artery)", image: "pc_rpa.png", desc: `Phase contrast ที่ Right pulmonary artery<ul><li>Localize ก่อน: axial Fiesta ผ่านกึ่งกลาง RPA</li><li>วาง plane ตั้งฉากกับ RPA</li></ul><div class="tip">Venc = <b>150 cm/s</b></div>` },
+    "pc_pa":     { title: "PC PA (Main Pulmonary Artery)", image: "pc_pa.jpg", desc: `Phase contrast ที่ MPA สำหรับวัด Pulmonic flow<ul><li>วาง plane จาก RVOT และ Axial Fiesta </li><li>ตั้งฉากกับ MPA</li></ul><div class="tip">Venc = <b>150 cm/s</b> | นำไปใช้คำนวณ Qp/Qs ต่อ</div>` },
+    "pc_rpa":    { title: "PC RPA (Right Pulmonary Artery)", image: "pc_rpa.jpg", desc: `Phase contrast ที่ RPA สำหรับวัด Right pulmonic flow<ul><li>Localizer RPA จาก Axial Fiesta โดยตัดผ่านกลาง RPA</li><li>วาง plane ตัดขวางกับ RPA</li></ul><div class="tip">Venc = <b>150 cm/s</b></div>` },
 
     // PC LPA / PC RPV → page 31
-    "pc_lpa":    { title: "PC LPA (Left Pulmonary Artery)", image: "pc_lpa.png", desc: `Phase contrast ที่ Left pulmonary artery<ul><li>Localize ก่อน: axial Fiesta ผ่านกึ่งกลาง LPA</li><li>วาง plane ตั้งฉากกับ LPA</li></ul><div class="tip">Venc = <b>150 cm/s</b></div>` },
-    "pc_rpv":    { title: "PC RPV (Right Pulmonary Vein)", image: "pc_rpv.png", desc: `Phase contrast ที่ Right
+    "pc_lpa":    { title: "PC LPA (Left Pulmonary Artery)", image: "pc_lpa.jpg", desc: `Phase contrast ที่ LPA สำหรับวัด Left pulmonic flow<ul><li>Localizer LPA จาก Axial Fiesta ผ่านกลาง LPA</li><li>วาง plane ตัดขวางกับ LPA</li></ul><div class="tip">Venc = <b>150 cm/s</b></div>` },
+    "pc_rpv":    { title: "PC RPV (Right Pulmonary Vein)", image: "pc_rpv.jpg", desc: `Phase contrast ที่ RPV สำหรับวัด Right
 
- Pulmonary Vein<ul><li>Localize: axial Fieata ผ่านกึ่งกลาง RPV</li><li>วาง plane ตั้งฉากกับ RPV </li></ul><div class="tip">Venc = <b>120 / 150 cm/s</b></div>` },
+ Pulmonic V. flow<ul><li>Localizer RPV จาก Axial Fiesta/Horizontal LAX ผ่านกึ่งกลาง RPV กับ Lt.Atrium</li><li>วาง plane ตัดขวางกับ RPV </li></ul><div class="tip">Venc = <b>120 / 150 cm/s</b></div>` },
 
     // PC LPV / PC LPV 
-    "pc_lpv":    { title: "PC LPV (Left Pulmonary Vein)", image: "pc_lpv.png", desc: `Phase contrast ที่ Left Pulmonary Vein<ul><li>Localize: axial Fiesta ผ่านกึ่งกลาง LPV</li><li>วาง plane ตั้งฉากกับ LPV  
+    "pc_lpv":    { title: "PC LPV (Left Pulmonary Vein)", image: "pc_lpv.jpg", desc: `Phase contrast ที่ LPV สำหรับวัด Left Pulmonic V. flow<ul><li>Localizer LPV จาก Axial Fiesta/Horizontal LAX ผ่าน LPV</li><li>วาง plane ตั้งฉากกับ LPV  
 </li></ul><div class="tip">Venc = <b>120 / 150 cm/s</b></div>` },
 
     // PC SVC / PC SVC
-    "pc_svc":    { title: "PC SVC (Superior Vena Cava)", image: "pc_svc.png", desc: `Phase contrast ที่ Superior Vena Cava<ul><li>Localize: axial ใต้ Azygos Vein</li><li>วาง plane ตั้งฉากกับ SVC </li></ul><div class="tip">Venc = <b>120 / 150 cm/s</b></div>` },
+    "pc_svc":    { title: "PC SVC (Superior Vena Cava)", image: "pc_svc.jpg", desc: `Phase contrast ที่ Superior Vena Cava<ul><li>Localize: axial ใต้ Azygos Vein</li><li>วาง plane ตั้งฉากกับ SVC </li></ul><div class="tip">Venc = <b>120 / 150 cm/s</b></div>` },
 
    // PC DAO / PC DAO 
-    "pc_dao":    { title: "PC DAO (Descending Aorta)", image: "pc_dao.png", desc: `Phase contrast ที่ Descending Aorta<ul><li>วางตั้งฉากกับ Descending aorta ใน plane Sagittal</li></ul><div class="tip">Venc = <b>120 / 150 cm/s</b></div>` },
+    "pc_dao":    { title: "PC DAO (Descending Aorta)", image: "pc_dao.jpg", desc: `Phase contrast ที่ Descending Aorta<ul><li>วางตั้งฉากกับ Descending aorta ใน plane Sagittal</li></ul><div class="tip">Venc = <b>120 / 150 cm/s</b></div>` },
 
 
+
+    // Parametric mapping — t1_native.png / t1_post_gd.png / t2_map.png อยู่ในโฟลเดอร์เดียวกัน
+    "t1_native": { title: "T1 Map — Native (Pre-contrast)", image: "t1_native.jpg", desc: `T1 mapping ก่อนฉีด Gd — SAX 3 ระดับ: <b>Base / Mid / Apex</b><ul><li>วาง plane จาก Cine 2CH และ 4CH</li><li>ตั้งฉากกับ long axis ของ LV (แนวเดียวกับ SAX stack)</li></ul><div class="tip">💡 ต้องทำ <b>ก่อนฉีด contrast</b></div>` },
+    "t1_post":   { title: "T1 Map — Post Gd", image: "t1_post_gd.jpg", desc: `T1 mapping หลังฉีด Gd — SAX 3 ระดับ: <b>Base / Mid / Apex</b><ul><li>วาง plane จาก Cine 2CH และ 4CH</li><li>ใช้ตำแหน่ง slice <b>เดียวกับ T1 Native</b></li></ul><div class="tip">💡 ใช้คู่กับ T1 Native เพื่อคำนวณ ECV — slice ต้องตรงกัน</div>` },
+    "t2_map":    { title: "T2 Map", image: "t2_map.jpg", desc: `T2 mapping — SAX 3 ระดับ: <b>Base / Mid / Apex</b><ul><li>วาง plane จาก Cine 2CH และ 4CH</li><li>ตั้งฉากกับ long axis ของ LV ตำแหน่งเดียวกับ T1 map</li></ul>` },
 
     // Aortic valve plane (6 ระดับ - รวมเป็นรูปเดียว) → page 33
-    "aov_levels":{ title: "Aortic Valve Plane (6 ระดับ)", image: "aortic_valve_plane.png", desc: `ระดับการวาง plane ของ aortic valve และ ascending aorta<ul><li><b>1.</b> Below Aortic valve</li><li><b>2.</b> Aortic valve (AoV)</li><li><b>3.</b> Aortic sinus</li><li><b>4.</b> Sinotubular junction</li><li><b>5.</b> Ascending aorta (AAO)</li><li><b>6.</b> Ascending aorta below brachiocephalic trunk</li></ul>` }
   };
 
   function toggleSubgroup(el) { el.parentElement.classList.toggle('open'); }
@@ -598,30 +1040,170 @@
     });
   });
 
-  function selectView(key, cat) {
-    const data = viewData[key];
-    if (!data) return;
-    document.getElementById('viewBreadcrumb').textContent = cat || '';
-    document.getElementById('viewTitle').textContent = data.title;
-    document.getElementById('viewDesc').innerHTML = data.desc || '';
-    const imgBox = document.getElementById('viewImage');
-    if (data.image) {
-      imgBox.innerHTML = `<img src="${data.image}" alt="${data.title}" onclick="openLightbox(this.src)">`;
-    } else {
-      imgBox.innerHTML = `<span class="placeholder">ยังไม่ได้ใส่รูป</span>`;
-    }
-  }
-
   function openLightbox(src) {
     document.getElementById('lightboxImg').src = src;
     document.getElementById('lightbox').classList.add('show');
   }
 
-  const catItems={Localize:[{v:'loc_2ch',l:'Localize 2CH'},{v:'loc_4ch',l:'Localize 4CH'},{v:'loc_sax',l:'Localize SAX'},{v:'loc_3ch',l:'Localize 3CH'}],Cine:[{v:'cine_2ch',l:'Cine 2CH'},{v:'cine_4ch',l:'Cine 4CH'},{v:'cine_sax',l:'Cine SAX'},{v:'cine_3ch',l:'Cine 3CH'},{v:'cine_2chrv',l:'Cine 2CH Rt. Ventricle'},{v:'cine_lvot',l:'Cine LVOT'},{v:'cine_rvot',l:'Cine RVOT'},{v:'rvit',l:'RVIT'},{v:'aov_view',l:'Aortic Valve'}],Flow:[{v:'pc_ao',l:'PC AO (Aorta)'},{v:'pc_ao_cc',l:'PC AO Candy Cane'},{v:'pc_pa',l:'PC PA (MPA)'},{v:'pc_rpa',l:'PC RPA'},{v:'pc_lpa',l:'PC LPA'},{v:'pc_rpv',l:'PC RPV'},{v:'pc_lpv',l:'PC LPV'},{v:'pc_svc',l:'PC SVC'},{v:'pc_dao',l:'PC DAO'},{v:'venc_table',l:'📊 Venc Table'},{v:'aov_levels',l:'Aortic Valve Plane'}]};
-  const catMeta={Localize:'การวาง Localizer',Cine:'Anatomy & Plane',Flow:'Phase Contrast'};
-  function openCategory(cat,first){const el=document.getElementById('viewList');el.innerHTML='';catItems[cat].forEach((it,i)=>{const d=document.createElement('div');d.className='view-item'+(i===0?' active':'');d.dataset.view=it.v;d.dataset.cat=cat;d.textContent=it.l;d.addEventListener('click',()=>{el.querySelectorAll('.view-item').forEach(x=>x.classList.remove('active'));d.classList.add('active');selectView(it.v,cat);});el.appendChild(d);});document.getElementById('detailTitle').textContent=cat;document.getElementById('detailSub').textContent=catMeta[cat];document.getElementById('categoryPicker').style.display='none';document.getElementById('categoryDetail').classList.add('active');selectView(first,cat);}
-  document.querySelectorAll('.cat-card').forEach(c=>c.addEventListener('click',()=>openCategory(c.dataset.category,c.dataset.first)));
-  document.getElementById('btnBack').addEventListener('click',()=>{document.getElementById('categoryDetail').classList.remove('active');document.getElementById('categoryPicker').style.display='flex';});
+  /* ───── Planning chain ───── */
+  // English versions of the view notes (Thai originals stay in viewData.desc)
+  const viewEn = {
+    loc_2ch: `Place the plane through the <b>mid valve</b> to the <b>apex</b>. <div class="tip">💡 Shimming: put the shim volume on the plane you will scan, symmetric over the heart.</div>`,
+    loc_4ch: `From Localize 2CH, place the plane from the valve to the apex to get the 4-chamber view.`,
+    loc_sax: `Place a stack of planes tilted along the myocardium (perpendicular to the long axis on both 2CH and 4CH) to build the short-axis stack.`,
+    loc_3ch: `From Localize SAX, place the plane through the centre of the aortic valve.`,
+    cine_2ch: `2-chamber view (vertical LAX) through the anterior and inferior walls, to assess the left ventricle and left atrium. <div class="tip"><ul><li>Axial FIESTA: through the centre of the atrioventricular valve → apex</li><li>SAX: parallel to the apex, <b>do not cut the atrioventricular septum</b></li></ul></div>`,
+    cine_4ch: `4-chamber view (LAX) → left ventricle, left atrium, right ventricle, right atrium. <div class="tip"><ul><li>Cut from the RV corner → anterolateral wall</li><li>Caution: do not cut through the aortic valve</li></ul></div>`,
+    cine_sax: `Short-axis stack (SA), used to calculate LV volumes and ejection fraction (EF). <div class="tip">💡 On 4CH and 2CH cine: <b>perpendicular to</b> the atrioventricular valve and the LV septum</div>`,
+    cine_3ch: `3-chamber view (LAX) → left ventricle, left atrium, aortic valve and aorta. <div class="tip">💡 On SAX cine: through the <b>aortic valve and the inferolateral wall of the left ventricle</b></div>`,
+    cine_2chrv: `2-chamber view (vertical LAX) → right atrium and right ventricle.`,
+    aov_view: `Aortic valve <div class="tip"><ul><li>Place 1–3 slices covering the aortic valve</li><li>Assess the valve area in systole &amp; diastole</li></ul></div>`,
+    cine_lvot: `Left ventricular outflow tract view (aortic valve and subaortic area)<ul><li>Coronal FOV</li><li>Planned from Cine 3CH</li></ul>`,
+    cine_rvot: `Right ventricular outflow tract view<ul><li>Planned from Axial FIESTA and RVIT</li><li>Line parallel to the <b>pulmonary trunk</b></li></ul>`,
+    cine_rvit: `Atrioventricular valve and inflow of the right ventricle<ul><li>Planned from SAX and 4CH</li><li>Cut through RA → RV across the tricuspid valve</li></ul>`,
+    venc_table: `Velocity encoding (cm/s) reference for each phase-contrast site<div class="tip">• Used for Qp/Qs flow<br>• Check for aliasing artifact<br>• If there is aliasing → raise Venc in steps of 20</div>`,
+    pc_ao: `Phase contrast, aorta<ul><li>Perpendicular to the ascending aorta, above the aortic valve</li></ul><div class="tip">Venc = <b>150 cm/s</b></div>`,
+    pc_ao_cc: `Phase contrast, aorta "candy cane view"<ul><li>Sagittal-oblique view of the aortic arch</li></ul><div class="tip">Venc = <b>150 cm/s</b></div>`,
+    pc_pa: `Phase contrast at the MPA to measure pulmonary flow<ul><li>Plan from RVOT and Axial FIESTA</li><li>Perpendicular to the MPA</li></ul><div class="tip">Venc = <b>150 cm/s</b> | used for Qp/Qs</div>`,
+    pc_rpa: `Phase contrast at the RPA to measure right pulmonary flow<ul><li>Localize the RPA on Axial FIESTA through the middle of the RPA</li><li>Place the plane across the RPA</li></ul><div class="tip">Venc = <b>150 cm/s</b></div>`,
+    pc_lpa: `Phase contrast at the LPA to measure left pulmonary flow<ul><li>Localize the LPA on Axial FIESTA through the middle of the LPA</li><li>Place the plane across the LPA</li></ul><div class="tip">Venc = <b>150 cm/s</b></div>`,
+    pc_rpv: `Phase contrast at the RPV to measure right pulmonary venous flow<ul><li>Localize the RPV on Axial FIESTA / horizontal LAX through the centre of the RPV and the left atrium</li><li>Place the plane across the RPV</li></ul><div class="tip">Venc = <b>120 / 150 cm/s</b></div>`,
+    pc_lpv: `Phase contrast at the LPV to measure left pulmonary venous flow<ul><li>Localize the LPV on Axial FIESTA / horizontal LAX through the LPV</li><li>Place the plane perpendicular to the LPV</li></ul><div class="tip">Venc = <b>120 / 150 cm/s</b></div>`,
+    pc_svc: `Phase contrast at the superior vena cava<ul><li>Localize: axial below the azygos vein</li><li>Place the plane perpendicular to the SVC</li></ul><div class="tip">Venc = <b>120 / 150 cm/s</b></div>`,
+    pc_dao: `Phase contrast at the descending aorta<ul><li>Perpendicular to the descending aorta on the sagittal plane</li></ul><div class="tip">Venc = <b>120 / 150 cm/s</b></div>`,
+    t1_native: `T1 mapping before Gd, 3 SAX levels: <b>Base / Mid / Apex</b><ul><li>Plan from Cine 2CH and 4CH</li><li>Perpendicular to the LV long axis (same as the SAX stack)</li></ul><div class="tip">💡 Must be done <b>before contrast injection</b></div>`,
+    t1_post: `T1 mapping after Gd, 3 SAX levels: <b>Base / Mid / Apex</b><ul><li>Plan from Cine 2CH and 4CH</li><li>Use <b>the same slice positions as T1 native</b></li></ul><div class="tip">💡 Paired with T1 native to calculate ECV, so the slices must match</div>`,
+    t2_map: `T2 mapping, 3 SAX levels: <b>Base / Mid / Apex</b><ul><li>Plan from Cine 2CH and 4CH</li><li>Perpendicular to the LV long axis, same positions as the T1 map</li></ul>`,
+  };
+  const plSteps = [
+    { t:'Localize', tag:'2CH → 4CH → SAX → 3CH',
+      d:'Build the planes in order. <b>2CH</b> through the mid valve to the apex (shim on the plane you will scan, keep a symmetric volume over the heart). <b>4CH</b> from valve to apex on the 2CH image. <b>SAX</b> stack perpendicular to the long axis on both 2CH and 4CH. <b>3CH</b> through the centre of the aortic valve on the SAX image.',
+      dt:'วาง plane ตามลำดับ <b>2CH</b> ผ่านกึ่งกลาง valve ถึง apex (shim ที่ plane ที่จะ scan และวาง volume ให้สมมาตรคลุมหัวใจห้องที่ต้องการดู) <b>4CH</b> จาก valve ถึง apex บนภาพ 2CH <b>SAX</b> วาง stack ตั้งฉากกับ long axis ทั้งบน 2CH และ 4CH <b>3CH</b> ผ่านกึ่งกลาง aortic valve บนภาพ SAX',
+      v:['loc_2ch','loc_4ch','loc_sax','loc_3ch'] },
+    { t:'Cine', tag:'2CH · 4CH · SAX · 3CH',
+      d:'Cine long-axis views plus the SAX stack for LV volumes and ejection fraction. Plan the SAX cine <b>perpendicular to the AV valve and LV septum</b> on 4CH and 2CH.',
+      dt:'Cine long-axis และ SAX stack สำหรับคำนวณ LV volume และ ejection fraction วาง SAX cine <b>ตั้งฉากกับ AV valve และ LV septum</b> บน 4CH และ 2CH',
+      v:['cine_2ch','cine_4ch','cine_sax','cine_3ch','cine_2chrv'] },
+    { t:'Outflow and inflow tracts', tt:'Outflow และ inflow tracts', tag:'LVOT · RVOT · RVIT',
+      d:'LVOT from Cine 3CH (coronal FOV). RVOT from Axial FIESTA and RVIT, parallel to the pulmonary trunk. RVIT from SAX and 4CH, across RA → RV through the tricuspid valve.',
+      dt:'LVOT วางจาก Cine 3CH (FOV coronal) RVOT วางจาก Axial FIESTA และ RVIT ขนานกับ pulmonary trunk RVIT วางจาก SAX และ 4CH ตัดผ่าน RA → RV ผ่าน tricuspid valve',
+      v:['cine_lvot','cine_rvot','cine_rvit','aov_view'] },
+    { t:'Mapping', tag:'T1 · T2 · ECV',
+      d:'Three SAX levels (base, mid, apex) planned from 2CH and 4CH. <b>Use identical slice positions</b> for native T1, post-Gd T1 and T2, or ECV will not match.',
+      dt:'SAX 3 ระดับ (base, mid, apex) วางจาก 2CH และ 4CH <b>ใช้ตำแหน่ง slice เดียวกัน</b> สำหรับ native T1 และ Post-Gd T1 เพื่อหาค่า ECV',
+      v:['t1_native','t1_post','t2_map'], tpl:['ecvTpl'] },
+    { t:'Flow', tag:'PC · Venc · Qp/Qs · RF',
+      d:'Phase-contrast planes sit perpendicular to each vessel. Check for aliasing and raise Venc in steps of 20 cm/s. Use the flow volumes to calculate <b>Qp/Qs</b> and the <b>regurgitant fraction</b>.',
+      dt:'วาง phase-contrast ตั้งฉากกับแต่ละหลอดเลือด ตรวจ aliasing และเพิ่ม Venc ทีละ 20 cm/s ใช้ flow volume คำนวณ <b>Qp/Qs</b> และ <b>regurgitant fraction</b>',
+      v:['pc_ao','pc_ao_cc','pc_pa','pc_rpa','pc_lpa','pc_rpv','pc_lpv','pc_svc','pc_dao','venc_table'], tpl:['qpqsTpl','rfTpl'] },
+  ];
+  function plShow(panel, key) {
+    const data = viewData[key]; if (!data) return;
+    panel.dataset.k = key;
+    panel.querySelectorAll('.pl-views button').forEach(b => b.classList.toggle('on', b.dataset.k === key));
+    panel.querySelector('.pl-vt').textContent = data.title;
+    panel.querySelector('.pl-note').innerHTML = L(viewEn[key] || data.desc, data.desc) || '';
+    const miss = L('No image yet', 'ยังไม่ได้ใส่รูป');
+    panel.querySelector('.pl-img').innerHTML = data.image
+      ? `<img src="${data.image}" alt="${data.title}" onclick="openLightbox(this.src)" onerror="this.outerHTML='<span class=&quot;placeholder&quot;>${miss} (${data.image})</span>'">`
+      : `<span class="placeholder">${miss}</span>`;
+  }
+  function plRender() {
+    const ol = document.getElementById('plChain');
+    plSteps.forEach(st => {
+      const li = document.createElement('li'); li.className = 'pl-step';
+      li.innerHTML = `<span class="pl-dot"></span><div class="pl-card">
+        <button class="pl-head" type="button"><div class="pl-title"><b class="pl-t"></b><span class="pl-tag">${st.tag}</span><span class="pl-chev">▶</span></div><p class="pl-desc"></p></button>
+        <div class="pl-panel">
+          <div class="pl-views">${st.v.length > 1 ? st.v.map(k => `<button type="button" data-k="${k}">${(viewData[k] || {}).title || k}</button>`).join('') : ''}</div>
+          <div class="pl-vt"></div><div class="pl-img"></div><div class="pl-note"></div>
+        </div></div>`;
+      const panel = li.querySelector('.pl-panel');
+      st.li = li; st.panel = panel;
+      panel.querySelectorAll('.pl-views button').forEach(b => b.addEventListener('click', () => plShow(panel, b.dataset.k)));
+      li.querySelector('.pl-head').addEventListener('click', () => {
+        const open = li.classList.toggle('open');
+        if (open && !panel.dataset.init) { panel.dataset.init = 1; plShow(panel, st.v[0]); }
+      });
+      (st.tpl || []).forEach(id => panel.appendChild(document.getElementById(id).content.cloneNode(true)));
+      ol.appendChild(li);
+    });
+    plText();
+  }
+  function plText() {
+    plSteps.forEach(st => {
+      st.li.querySelector('.pl-t').textContent = L(st.t, st.tt || st.t);
+      st.li.querySelector('.pl-desc').innerHTML = L(st.d, st.dt);
+      if (st.panel.dataset.k) plShow(st.panel, st.panel.dataset.k);
+    });
+  }
+  plRender();
+
+  /* ───── Flow & mapping calculators ───── */
+  const q = id => document.getElementById(id);
+  const badge = (el, text, cls) => { el.textContent = text; el.className = 'qq-badge' + (cls ? ' ' + cls : ''); };
+  function calcQQ() {
+    const p = parseFloat(q('qq_p').value), s = parseFloat(q('qq_s').value), hr = parseFloat(q('qq_hr').value), b = q('qq_badge');
+    if (!(p > 0) || !(s > 0)) { q('qq_ratio').textContent = '—'; q('qq_flow').textContent = '—'; return badge(b, L('Enter both stroke volumes', 'กรอก stroke volume ทั้งสองค่า'), 'chk'); }
+    const r = p / s;
+    q('qq_ratio').textContent = r.toFixed(2);
+    q('qq_flow').textContent = hr > 0 ? `${(p * hr / 1000).toFixed(1)} / ${(s * hr / 1000).toFixed(1)}` : '—';
+    if (r < 1.0) badge(b, L('Qp/Qs below 1: check the flow measurements', 'Qp/Qs ต่ำกว่า 1: ตรวจสอบการวัด flow'), 'chk');
+    else if (r < 1.2) badge(b, L('No significant shunt', 'ไม่มี shunt ที่มีนัยสำคัญ'), 'none');
+    else if (r <= 1.5) badge(b, L('Borderline shunt', 'Shunt ก้ำกึ่ง (borderline)'), '');
+    else badge(b, L('Significant shunt (usually)', 'Shunt มีนัยสำคัญ (โดยทั่วไป)'), 'sig');
+  }
+  function calcECV() {
+    const m1 = parseFloat(q('ecv_m1').value), m2 = parseFloat(q('ecv_m2').value), b1 = parseFloat(q('ecv_b1').value), b2 = parseFloat(q('ecv_b2').value), hct = parseFloat(q('ecv_hct').value), bd = q('ecv_badge');
+    const clear = msg => { q('ecv_val').textContent = '—'; q('ecv_dr').textContent = '—'; q('ecv_lam').textContent = '—'; badge(bd, msg, 'chk'); };
+    if (![m1, m2, b1, b2, hct].every(x => x > 0)) return clear(L('Enter all five values', 'กรอกค่าให้ครบทั้ง 5 ช่อง'));
+    if (m2 >= m1 || b2 >= b1) return clear(L('Post-contrast T1 must be shorter than native T1', 'T1 หลังฉีดต้องสั้นกว่า native T1'));
+    if (hct >= 100) return clear(L('Hematocrit must be below 100%', 'Hematocrit ต้องต่ำกว่า 100%'));
+    const dM = 1000 / m2 - 1000 / m1, dB = 1000 / b2 - 1000 / b1, lam = dM / dB, ecv = (1 - hct / 100) * lam * 100;
+    q('ecv_val').textContent = ecv.toFixed(1) + '%';
+    q('ecv_dr').textContent = `${dM.toFixed(2)} / ${dB.toFixed(2)}`;
+    q('ecv_lam').textContent = lam.toFixed(2);
+    if (ecv < 20) badge(bd, L('Below the typical range: check ROIs and hematocrit', 'ต่ำกว่าช่วงปกติทั่วไป: ตรวจสอบ ROI และ hematocrit'), 'chk');
+    else if (ecv < 30) badge(bd, L('Within the typical normal range', 'อยู่ในช่วงปกติทั่วไป'), 'none');
+    else if (ecv < 40) badge(bd, L('Increased ECV', 'ECV เพิ่มขึ้น'), '');
+    else badge(bd, L('Markedly increased ECV', 'ECV เพิ่มขึ้นมาก'), 'sig');
+  }
+  let rfValve = 'ao';
+  function calcRF() {
+    const f = parseFloat(q('rf_f').value), r = parseFloat(q('rf_b').value), hr = parseFloat(q('rf_hr').value), bd = q('rf_badge');
+    const clear = msg => { ['rf_val', 'rf_vol', 'rf_net', 'rf_lmin'].forEach(id => q(id).textContent = '—'); badge(bd, msg, 'chk'); };
+    if (!(f > 0) || !(r >= 0) || isNaN(r)) return clear(L('Enter forward and backward flow', 'กรอก forward และ backward flow'));
+    if (r > f) return clear(L('Backward flow is larger than forward flow: check the measurement', 'Backward flow มากกว่า forward flow: ตรวจสอบการวัด'));
+    const rf = r / f * 100;
+    q('rf_val').textContent = rf.toFixed(1) + '%';
+    q('rf_vol').textContent = r.toFixed(1);
+    q('rf_net').textContent = (f - r).toFixed(1);
+    q('rf_lmin').textContent = hr > 0 ? (r * hr / 1000).toFixed(2) : '—';
+    if (rf < 20) badge(bd, L('Mild regurgitation', 'Regurgitation ระดับน้อย (mild)'), 'none');
+    else if (rf <= 40) badge(bd, L('Moderate regurgitation', 'Regurgitation ระดับปานกลาง (moderate)'), '');
+    else badge(bd, L('Severe regurgitation', 'Regurgitation ระดับรุนแรง (severe)'), 'sig');
+  }
+  function rfLabels() {
+    q('rf_where').textContent = rfValve === 'ao'
+      ? L('Measure on the phase-contrast plane of the ascending aorta, just above the aortic valve.', 'วัดจาก phase-contrast ของ ascending aorta เหนือ aortic valve')
+      : L('Measure on the phase-contrast plane of the main pulmonary artery (MPA).', 'วัดจาก phase-contrast ของ main pulmonary artery (MPA)');
+  }
+  q('rf_opts').addEventListener('click', e => { const b = e.target.closest('.rf-opt'); if (!b) return; rfValve = b.dataset.v;
+    q('rf_opts').querySelectorAll('.rf-opt').forEach(x => x.classList.toggle('on', x === b)); rfLabels(); calcRF(); });
+  ['qq_p', 'qq_s'].forEach(id => q(id).addEventListener('input', calcQQ));
+  ['ecv_m1', 'ecv_m2', 'ecv_b1', 'ecv_b2', 'ecv_hct'].forEach(id => q(id).addEventListener('input', calcECV));
+  ['rf_f', 'rf_b'].forEach(id => q(id).addEventListener('input', calcRF));
+  // heart-rate fields follow the shared heart rate
+  q('qq_hr').addEventListener('input', e => { HR.set(e.target.value, 'qq'); calcQQ(); });
+  q('rf_hr').addEventListener('input', e => { HR.set(e.target.value, 'rf'); calcRF(); });
+  document.addEventListener('hrchange', e => {
+    if (e.detail.src !== 'qq') q('qq_hr').value = e.detail.v;
+    if (e.detail.src !== 'rf') q('rf_hr').value = e.detail.v;
+    calcQQ(); calcRF();
+  });
+  q('qq_hr').value = HR.v; q('rf_hr').value = HR.v;
+  calcQQ(); calcECV(); rfLabels(); calcRF();
+  document.addEventListener('langchange', () => { plText(); calcQQ(); calcECV(); rfLabels(); calcRF(); });
 
   document.querySelectorAll('.calc-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -659,11 +1241,11 @@
 
     document.getElementById('ade_output').innerHTML = `
       <div class="result-item"><span class="result-label">Adenosine (${factor} × ${w} × ${time})</span><span class="result-value">${totalMg.toFixed(2)}<span class="unit">mg</span></span></div>
-      <div class="result-item"><span class="result-label">จำนวนขวด (คำนวณ)</span><span class="result-value">${vialsExact.toFixed(2)}<span class="unit">ขวด</span></span></div>
-      <div class="result-item"><span class="result-label">จำนวนขวดที่ต้องเปิด</span><span class="result-value">${vialsCeil}<span class="unit">ขวด</span></span></div>
-      <div class="result-item"><span class="result-label">ปริมาตรยา Adenosine</span><span class="result-value">${drugVol.toFixed(2)}<span class="unit">mL</span></span></div>
-      <div class="result-item"><span class="result-label">เติม NSS</span><span class="result-value">${nssVol.toFixed(2)}<span class="unit">mL</span></span></div>
-      <div class="result-item"><span class="result-label">ปริมาตรรวม</span><span class="result-value">40.00<span class="unit">mL</span></span></div>`;
+      <div class="result-item"><span class="result-label">${L('Vials (calculated)', 'จำนวนขวด (คำนวณ)')}</span><span class="result-value">${vialsExact.toFixed(2)}<span class="unit">${L('vials', 'ขวด')}</span></span></div>
+      <div class="result-item"><span class="result-label">${L('Vials to open', 'จำนวนขวดที่ต้องเปิด')}</span><span class="result-value">${vialsCeil}<span class="unit">${L('vials', 'ขวด')}</span></span></div>
+      <div class="result-item"><span class="result-label">${L('Adenosine volume', 'ปริมาตรยา Adenosine')}</span><span class="result-value">${drugVol.toFixed(2)}<span class="unit">mL</span></span></div>
+      <div class="result-item"><span class="result-label">${L('Add NSS', 'เติม NSS')}</span><span class="result-value">${nssVol.toFixed(2)}<span class="unit">mL</span></span></div>
+      <div class="result-item"><span class="result-label">${L('Total volume', 'ปริมาตรรวม')}</span><span class="result-value">40.00<span class="unit">mL</span></span></div>`;
     document.getElementById('ade_result').classList.add('show');
   }
 
@@ -683,15 +1265,15 @@
     const factor = parseFloat(document.getElementById('perf_factor').value) || 0.15;
     const vol = factor * w;
     let html = `
-      <div class="result-item"><span class="result-label">น้ำหนักตัว</span><span class="result-value">${w}<span class="unit">kg</span></span></div>
-      <div class="result-item"><span class="result-label">สูตร</span><span class="result-value" style="font-size:15px">${factor} × ${w}</span></div>
-      <div class="result-item"><span class="result-label">ปริมาตร Gadovist รวม</span><span class="result-value">${vol.toFixed(2)}<span class="unit">mL</span></span></div>`;
+      <div class="result-item"><span class="result-label">${L('Body weight', 'น้ำหนักตัว')}</span><span class="result-value">${w}<span class="unit">kg</span></span></div>
+      <div class="result-item"><span class="result-label">${L('Formula', 'สูตร')}</span><span class="result-value" style="font-size:15px">${factor} × ${w}</span></div>
+      <div class="result-item"><span class="result-label">${L('Total Gadovist volume', 'ปริมาตร Gadovist รวม')}</span><span class="result-value">${vol.toFixed(2)}<span class="unit">mL</span></span></div>`;
     if (Math.abs(factor - 0.175) < 0.001) {
       const adeVol = 0.10 * w;
       const perfVol = 0.075 * w;
       html += `
-        <div class="result-item"><span class="result-label">— สำหรับ Adenosine stress (0.10)</span><span class="result-value">${adeVol.toFixed(2)}<span class="unit">mL</span></span></div>
-        <div class="result-item"><span class="result-label">— สำหรับ Perfusion / rest (0.075)</span><span class="result-value">${perfVol.toFixed(2)}<span class="unit">mL</span></span></div>`;
+        <div class="result-item"><span class="result-label">${L('— for Adenosine stress (0.10)', '— สำหรับ Adenosine stress (0.10)')}</span><span class="result-value">${adeVol.toFixed(2)}<span class="unit">mL</span></span></div>
+        <div class="result-item"><span class="result-label">${L('— for Perfusion / rest (0.075)', '— สำหรับ Perfusion / rest (0.075)')}</span><span class="result-value">${perfVol.toFixed(2)}<span class="unit">mL</span></span></div>`;
     }
     document.getElementById('perf_output').innerHTML = html;
     document.getElementById('perf_result').classList.add('show');
@@ -770,11 +1352,11 @@
     const p4Time = p4Rate > 0 ? p4Dose / p4Rate : 0;
 
     let warning = '';
-    if (preload < 0) warning += '⚠️ Tubing buffer มากกว่า Tubing volume — Pre-load ติดลบ<br>';
-    if (p2Dose < 0)  warning += '⚠️ Phase 2 ติดลบ — ตรวจสอบ Total CM และ Pre-load<br>';
-    if (p3Dose < 0)  warning += '⚠️ Phase 3 ติดลบ — ตรวจสอบ Tubing volume<br>';
-    if (p4Dose < tube) warning += `⚠️ Phase 4 NSS (${p4Dose} mL) น้อยกว่า Tubing volume (${tube} mL) — อาจ flush ไม่หมด<br>`;
-    if (total < 3)   warning += '⚠️ Total CM ควรไม่ต่ำกว่า 3 mL<br>';
+    if (preload < 0) warning += L('⚠️ Tubing buffer is larger than the tubing volume, so pre-load is negative', '⚠️ Tubing buffer มากกว่า Tubing volume — Pre-load ติดลบ') + '<br>';
+    if (p2Dose < 0)  warning += L('⚠️ Phase 2 is negative: check Total CM and pre-load', '⚠️ Phase 2 ติดลบ — ตรวจสอบ Total CM และ Pre-load') + '<br>';
+    if (p3Dose < 0)  warning += L('⚠️ Phase 3 is negative: check the tubing volume', '⚠️ Phase 3 ติดลบ — ตรวจสอบ Tubing volume') + '<br>';
+    if (p4Dose < tube) warning += L(`⚠️ Phase 4 NSS (${p4Dose} mL) is less than the tubing volume (${tube} mL), so the line may not flush completely`, `⚠️ Phase 4 NSS (${p4Dose} mL) น้อยกว่า Tubing volume (${tube} mL) — อาจ flush ไม่หมด`) + '<br>';
+    if (total < 3)   warning += L('⚠️ Total CM should be at least 3 mL', '⚠️ Total CM ควรไม่ต่ำกว่า 3 mL') + '<br>';
 
     const cls = (syr) => syr === 'CM' ? 'cm' : 'ns';
 
@@ -802,6 +1384,847 @@
     `;
     document.getElementById('dp_result').classList.add('show');
   }
+
+  /* ───── header controls ───── */
+  document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+  const gHr = document.getElementById('g_hr'); gHr.value = HR.v;
+  gHr.addEventListener('input', () => HR.set(gHr.value, 'header'));
+  document.addEventListener('hrchange', e => { if (e.detail.src !== 'header') gHr.value = e.detail.v; });
+  const gLink = document.getElementById('g_link');
+  function linkUI() {
+    gLink.classList.toggle('on', HR.linked); gLink.setAttribute('aria-pressed', String(HR.linked));
+    gLink.textContent = HR.linked ? L('🔗 Linked', '🔗 เชื่อม HR') : L('Unlinked', 'แยก HR');
+    gLink.title = HR.linked ? L('One heart rate for every page. Click to set each page separately.', 'ใช้ HR เดียวกันทุกหน้า กดเพื่อแยกตั้งค่าแต่ละหน้า')
+                            : L('Each page keeps its own heart rate. Click to link them to the header value.', 'แต่ละหน้าใช้ HR ของตัวเอง กดเพื่อเชื่อมกับค่าในหัวเว็บ');
+    gHr.disabled = !HR.linked;
+  }
+  gLink.addEventListener('click', () => {
+    HR.linked = !HR.linked; try { localStorage.setItem('cq_hrlink', HR.linked ? '1' : '0'); } catch (e) {}
+    if (HR.linked) HR.sync(gHr.value);
+    linkUI();
+  });
+  document.addEventListener('langchange', linkUI); linkUI();
+  document.addEventListener('langchange', () => { calcAdenosine(); calcPerfusion(); calcDualPhase(); });
+  applyLang();
+  if (window.LANG !== 'en') document.dispatchEvent(new Event('langchange'));
 </script>
-</body>
-</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+window.initHeart=function(){
+const V3 = THREE.Vector3;
+const $ = id => document.getElementById(id);
+
+/* ───────── LV geometry frame (body axes: +X patient left, +Y up, +Z anterior) ───────── */
+const L = 1.5, R = 0.55;
+const axisA = new V3(0.6,-0.55,0.45).normalize();                      // base → apex
+const antA  = new V3(0,0,1).addScaledVector(axisA,-axisA.z).normalize(); // anterior
+const sepA  = new V3().crossVectors(axisA, antA).normalize();           // septal (toward patient's right)
+function frame(u, phiDeg){
+  const ph = phiDeg*Math.PI/180, cu = Math.cos(u), su = Math.sin(u);
+  const rad = antA.clone().multiplyScalar(Math.cos(ph)).addScaledVector(sepA, Math.sin(ph));
+  const p = axisA.clone().multiplyScalar(L*su).addScaledVector(rad, R*cu);
+  const n = axisA.clone().multiplyScalar(su/L).addScaledVector(rad, cu/R).normalize();
+  return {p,n};
+}
+function surf(u,phi,off=0){ const f=frame(u,phi); return f.p.addScaledVector(f.n,off); }
+
+/* ───────── AHA 17 segments ───────── */
+const BASAL = ['anterior','anteroseptal','inferoseptal','inferior','inferolateral','anterolateral'];
+const APICAL = ['anterior','septal','inferior','lateral'];
+const TERR = {1:'LAD',2:'LAD',3:'RCA',4:'RCA',5:'LCx',6:'LCx',7:'LAD',8:'LAD',9:'RCA',10:'RCA',11:'LCx',12:'LCx',13:'LAD',14:'LAD',15:'RCA',16:'LCx',17:'LAD'};
+const ART_COL = {LAD:'#ff5a4f', LCx:'#b583ff', RCA:'#ffb020', LM:'#ff8a3d'};
+const segs = [];
+for(let i=0;i<6;i++){ const c=60*i; segs.push({id:1+i,ring:0,lvl:'Basal',name:BASAL[i],u0:0,u1:.35,p0:c-30,p1:c+30,c}); }
+for(let i=0;i<6;i++){ const c=60*i; segs.push({id:7+i,ring:1,lvl:'Mid',name:BASAL[i],u0:.35,u1:.72,p0:c-30,p1:c+30,c}); }
+for(let i=0;i<4;i++){ const c=90*i; segs.push({id:13+i,ring:2,lvl:'Apical',name:APICAL[i],u0:.72,u1:1.08,p0:c-45,p1:c+45,c}); }
+segs.push({id:17,ring:3,lvl:'',name:'Apex',u0:1.08,u1:Math.PI/2,p0:0,p1:360,c:0});
+segs.forEach(s=>{ s.full = s.id===17 ? 'Apex' : `${s.lvl} ${s.name}`; s.terr=TERR[s.id];
+  const light=[58,50,42,34][s.ring]; s.segCol=new THREE.Color(`hsl(${(s.c*0.95+10)%360},68%,${light}%)`);
+  s.terrCol=new THREE.Color(ART_COL[s.terr]); });
+const segById = id => segs[id-1];
+
+/* ───────── three.js scene ───────── */
+const stage = $('stage');
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+stage.appendChild(renderer.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color('#0b0f15');
+const camera = new THREE.PerspectiveCamera(40,1,.1,100);
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+const HP = new V3(0.1,0.45,-0.05);                  // base-centre of LV in world
+const TARGET = HP.clone().addScaledVector(axisA, L*.4);
+controls.target.copy(TARGET); camera.position.set(2.8,1.6,6.3); controls.update();
+scene.add(new THREE.HemisphereLight('#bcd4ff','#201418',.85));
+const key = new THREE.DirectionalLight('#fff',.9); key.position.set(3,4,6); scene.add(key);
+const rim = new THREE.DirectionalLight('#6fa8ff',.4); rim.position.set(-4,1,-5); scene.add(rim);
+
+const heart = new THREE.Group(); heart.position.copy(HP); scene.add(heart);
+const lvGroup = new THREE.Group(), corGroup = new THREE.Group(), anaGroup = new THREE.Group(), numGroup = new THREE.Group();
+heart.add(lvGroup, corGroup, anaGroup, numGroup);
+
+function label(text,{fg='#fff',bg='rgba(8,12,18,.78)',s=.26,depth=true,w=1}={}){
+  const c=document.createElement('canvas'); c.width=128*w; c.height=128; const g=c.getContext('2d');
+  g.fillStyle=bg; g.beginPath();
+  if(w===1) g.arc(64,64,52,0,7); else g.roundRect ? g.roundRect(6,28,c.width-12,72,30) : g.rect(6,28,c.width-12,72);
+  g.fill(); g.fillStyle=fg; g.font='bold '+(w===1?60:54)+'px system-ui'; g.textAlign='center'; g.textBaseline='middle';
+  g.fillText(text,c.width/2,66);
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthTest:depth}));
+  sp.scale.set(s*w,s,1); sp.renderOrder=10; return sp;
+}
+
+/* LV segment meshes */
+const pickables = [];
+const segMeshes = [];
+segs.forEach(s=>{
+  const nu=Math.max(3,Math.ceil((s.u1-s.u0)/.05)), np=Math.max(4,Math.ceil((s.p1-s.p0)/5));
+  const pos=[],nor=[],idx=[];
+  for(let i=0;i<=nu;i++)for(let j=0;j<=np;j++){
+    const f=frame(s.u0+(s.u1-s.u0)*i/nu, s.p0+(s.p1-s.p0)*j/np);
+    pos.push(f.p.x,f.p.y,f.p.z); nor.push(f.n.x,f.n.y,f.n.z);
+  }
+  for(let i=0;i<nu;i++)for(let j=0;j<np;j++){const k=i*(np+1)+j; idx.push(k,k+np+1,k+1,k+1,k+np+1,k+np+2);}
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+  g.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3)); g.setIndex(idx);
+  const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:s.segCol,roughness:.45,metalness:.05,side:THREE.DoubleSide,transparent:true}));
+  m.userData={type:'seg',id:s.id}; s.mesh=m; lvGroup.add(m); pickables.push(m); segMeshes.push(m);
+  // outline
+  const pts=[]; const edge=(a,b,fn,n)=>{for(let i=0;i<=n;i++)pts.push(fn(a+(b-a)*i/n));};
+  const F=(u,p)=>surf(u,p,.004);
+  if(s.id===17){ edge(0,360,p=>F(s.u0,p),72); }
+  else{
+    edge(s.p0,s.p1,p=>F(s.u0,p),12); edge(s.u0,s.u1,u=>F(u,s.p1),10);
+    edge(s.p1,s.p0,p=>F(s.u1,p),12); edge(s.u1,s.u0,u=>F(u,s.p0),10);
+  }
+  lvGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:'#05080c'})));
+  // number
+  const uc=s.id===17?Math.PI/2:(s.u0+s.u1)/2, pc=(s.p0+s.p1)/2;
+  const lb=label(String(s.id),{s:.2,depth:true}); lb.position.copy(surf(uc,pc,.07)); numGroup.add(lb);
+});
+
+/* Other anatomy */
+const anaMat=(c,o=.55)=>new THREE.MeshStandardMaterial({color:c,roughness:.6,transparent:true,opacity:o,depthWrite:false,side:THREE.DoubleSide});
+function ellipsoid(center,rA,rS,ra,mat){
+  const m=new THREE.Mesh(new THREE.SphereGeometry(1,40,28),mat);
+  const bm=new THREE.Matrix4().makeBasis(antA,sepA,axisA); m.setRotationFromMatrix(bm);
+  m.scale.set(rA,rS,ra); m.position.copy(center); return m;
+}
+const dir60 = antA.clone().multiplyScalar(Math.cos(1.05)).addScaledVector(sepA,Math.sin(1.05));
+const RV = ellipsoid(axisA.clone().multiplyScalar(L*.36).addScaledVector(dir60,R*.82), R*.62, R*.55, L*.5, anaMat('#b9708a',.42));
+RV.userData={type:'ana',name:'Right ventricle'}; anaGroup.add(RV); pickables.push(RV);
+const RA = new THREE.Mesh(new THREE.SphereGeometry(1,32,24),anaMat('#c27b8a',.5)); RA.scale.set(.42,.5,.42); RA.position.set(-.85,.15,.05); RA.userData={type:'ana',name:'Right atrium'};
+const LA = new THREE.Mesh(new THREE.SphereGeometry(1,32,24),anaMat('#c27b8a',.5)); LA.scale.set(.55,.34,.4); LA.position.set(.1,.3,-.55); LA.userData={type:'ana',name:'Left atrium'};
+anaGroup.add(RA,LA); pickables.push(RA,LA);
+function vessel(pts,r,col,name,o=.85){
+  const m=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(p=>new V3(...p))),48,r,14),anaMat(col,o));
+  m.userData={type:'ana',name}; anaGroup.add(m); pickables.push(m); return m;
+}
+vessel([[-.15,.1,.15],[-.18,.7,.1],[-.05,1.15,-.05],[.4,1.35,-.3],[.75,1.1,-.5],[.8,.5,-.65],[.8,-.5,-.7]],.2,'#d2574f','Aorta');
+vessel([[.05,.2,.65],[.15,.85,.35],[.3,1.1,0]],.17,'#5b7fc7','Pulmonary trunk');
+vessel([[.3,1.1,0],[.9,1.2,-.3]],.11,'#5b7fc7','Left pulmonary artery');
+vessel([[.3,1.1,0],[-.7,1.1,-.25]],.11,'#5b7fc7','Right pulmonary artery');
+vessel([[-.75,.5,0],[-.7,1.7,-.05]],.15,'#4a6fb0','Superior vena cava');
+vessel([[-.8,-.2,0],[-.85,-1.1,-.2]],.16,'#4a6fb0','Inferior vena cava');
+
+/* Coronary arteries */
+const arteries=[];
+const AO = [-.15,.1,.15];
+function artery(id,group,name,r,pts,opt={}){
+  const v=pts.map(p=>p==='AO'?new V3(...AO):surf(p[0],p[1],p[2]??.05));
+  const m=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(v),Math.max(40,pts.length*14),r,10),
+    new THREE.MeshStandardMaterial({color:ART_COL[group],roughness:.35,emissive:ART_COL[group],emissiveIntensity:.18}));
+  m.userData={type:'art',id,group,name}; m.renderOrder=3; corGroup.add(m); pickables.push(m); arteries.push(m); return m;
+}
+artery('LM','LM','Left main (LMCA)',.05,['AO',[-.04,10,.12],[-.02,14,.07]]);
+artery('LAD','LAD','Left anterior descending (LAD)',.04,[[-.02,14,.07],[.15,28,.05],[.4,32,.05],[.7,34,.05],[1.0,36,.05],[1.3,42,.05],[1.5,60,.05]]);
+artery('D1','LAD','First diagonal (D1)',.026,[[.3,32,.05],[.5,10,.05],[.8,352,.05],[1.0,340,.05]]);
+artery('D2','LAD','Second diagonal (D2)',.02,[[.65,35,.05],[.85,15,.05],[1.1,0,.05]]);
+artery('LCX','LCx','Left circumflex (LCx)',.04,[[-.02,14,.07],[0,340,.1],[0,310,.08],[.03,285,.07],[.06,255,.07],[.1,225,.07],[.12,200,.07]]);
+artery('OM1','LCx','Obtuse marginal 1 (OM1)',.028,[[.02,300,.07],[.3,295,.05],[.6,290,.05],[.9,285,.05],[1.15,290,.05]]);
+artery('OM2','LCx','Obtuse marginal 2 (OM2)',.022,[[.05,250,.07],[.4,245,.05],[.8,240,.05]]);
+artery('RCA','RCA','Right coronary artery (RCA)',.042,['AO',[-.06,355,.22],[-.04,40,.42],[-.01,90,.52],[.02,125,.47],[.04,150,.3]]);
+artery('AM','RCA','Acute marginal (RV branch)',.026,[[-.01,85,.52],[.3,95,.4],[.6,108,.22],[.9,118,.1]]);
+artery('PDA','RCA','Posterior descending (PDA)',.032,[[.04,150,.3],[.2,150,.08],[.5,150,.05],[.8,150,.05],[1.1,150,.05]]);
+artery('PLV','RCA','Posterolateral branch (PLV)',.024,[[.04,150,.3],[.15,190,.07],[.4,215,.05],[.7,225,.05]]);
+
+/* Occlusion markers */
+const occMarker = new THREE.Mesh(new THREE.SphereGeometry(.09,20,16),new THREE.MeshBasicMaterial({color:'#ff2222'}));
+occMarker.visible=false; occMarker.renderOrder=11; corGroup.add(occMarker);
+const occPos={LAD:surf(.12,29,.07),LCx:surf(.0,335,.1),RCA:surf(.02,125,.47),RCAp:surf(-.05,20,.28)};
+
+/* Chest wall */
+const A_=1.7,B_=1.25;
+const chest=new THREE.Group(); scene.add(chest);
+const torso=new THREE.Mesh(new THREE.CylinderGeometry(1,1,3.8,64,1,true),new THREE.MeshStandardMaterial({color:'#6b87a8',transparent:true,opacity:.1,side:THREE.DoubleSide,depthWrite:false,roughness:.9}));
+torso.scale.set(A_,1,B_); torso.position.y=.1; chest.add(torso);
+for(let y=1.4;y>=-.75;y-=.27){ const pts=[]; for(let i=0;i<=96;i++){const t=i/96*Math.PI*2;pts.push(new V3(Math.sin(t)*A_*.985,y,Math.cos(t)*B_*.985));}
+  chest.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:'#7e97b6',transparent:true,opacity:.22}))); }
+const stern=new THREE.Mesh(new THREE.BoxGeometry(.2,1.5,.05),new THREE.MeshStandardMaterial({color:'#9fb2c8',transparent:true,opacity:.28,depthWrite:false}));
+stern.position.set(0,.7,B_-.06); chest.add(stern);
+const lblR=label('Pt R',{w:2,s:.3,depth:false}); lblR.position.set(-2.4,.2,0); chest.add(lblR);
+const lblL=label('Pt L',{w:2,s:.3,depth:false}); lblL.position.set(2.4,.2,0); chest.add(lblL);
+
+/* ECG electrodes */
+function chestPt(psi,y,off=.03){ const p=psi*Math.PI/180, x=A_*Math.sin(p), z=B_*Math.cos(p);
+  return new V3(x,y,z).addScaledVector(new V3(x/(A_*A_),0,z/(B_*B_)).normalize(),off); }
+const LEADS=[
+ {id:'V1', grp:'pre', psi:-8, y:.35, place:'4th intercostal space, right sternal border', view:'Septum / RV', segs:[2,3,8,9]},
+ {id:'V2', grp:'pre', psi:8,  y:.35, place:'4th intercostal space, left sternal border', view:'Septum / anterior RV–LV', segs:[2,3,8,9,14]},
+ {id:'V3', grp:'pre', psi:21, y:.05, place:'Midway between V2 and V4', view:'Anterior wall', segs:[1,7,13,14]},
+ {id:'V4', grp:'pre', psi:35, y:-.25,place:'5th intercostal space, mid-clavicular line', view:'Anterior wall / apex', segs:[1,7,13,17]},
+ {id:'V5', grp:'pre', psi:60, y:-.25,place:'Anterior axillary line, level of V4', view:'Anterolateral wall', segs:[6,12,16]},
+ {id:'V6', grp:'pre', psi:90, y:-.25,place:'Mid-axillary line, level of V4', view:'Lateral wall', segs:[5,6,11,12,16]},
+ {id:'V3R',grp:'rt', psi:-21,y:.05, place:'Right-chest mirror of V3', view:'Right ventricle', rv:true, segs:[]},
+ {id:'V4R',grp:'rt', psi:-35,y:-.25,place:'5th ICS, right mid-clavicular line (key lead for RV infarct)', view:'Right ventricle', rv:true, segs:[]},
+ {id:'V5R',grp:'rt', psi:-60,y:-.25,place:'Right anterior axillary line, level of V4R', view:'Right ventricle (lateral)', rv:true, segs:[]},
+ {id:'V6R',grp:'rt', psi:-90,y:-.25,place:'Right mid-axillary line, level of V4R', view:'Right ventricle (lateral)', rv:true, segs:[]},
+ {id:'V7', grp:'post',psi:115,y:-.25,place:'Posterior axillary line, level of V6', view:'Posterior (basal inferolateral) wall', segs:[5,11]},
+ {id:'V8', grp:'post',psi:140,y:-.25,place:'Tip of the scapula, level of V6', view:'Posterior wall', segs:[4,5,10,11]},
+ {id:'V9', grp:'post',psi:160,y:-.25,place:'Left paraspinal border, level of V6', view:'Posterior (basal inferior) wall', segs:[4,10]},
+ {id:'I',   grp:'limb',view:'High lateral / lateral',place:'Limb lead (RA → LA)',segs:[6,12]},
+ {id:'II',  grp:'limb',view:'Inferior wall',place:'Limb lead (RA → LL)',segs:[3,4,10,15]},
+ {id:'III', grp:'limb',view:'Inferior wall',place:'Limb lead (LA → LL)',segs:[4,10,15]},
+ {id:'aVR', grp:'limb',view:'Right shoulder → LV cavity (no wall)',place:'Augmented limb lead',segs:[]},
+ {id:'aVL', grp:'limb',view:'High lateral wall',place:'Augmented limb lead',segs:[1,6]},
+ {id:'aVF', grp:'limb',view:'Inferior wall',place:'Augmented limb lead',segs:[3,4,9,10,15]},
+];
+const leadById={}; LEADS.forEach(l=>leadById[l.id]=l);
+const ecgGroup=new THREE.Group(); scene.add(ecgGroup);
+LEADS.filter(l=>l.psi!==undefined).forEach(l=>{
+  const col=l.rv?'#4cc2ff':l.grp==='post'?'#ffd24c':'#46d39a'; l.col=col;
+  const e=new THREE.Mesh(new THREE.SphereGeometry(.075,18,14),new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:.5}));
+  e.position.copy(chestPt(l.psi,l.y,.04)); e.userData={type:'lead',id:l.id}; l.mesh=e; ecgGroup.add(e); pickables.push(e);
+  const lb=label(l.id,{w:2,s:.22,depth:false,fg:col}); lb.position.copy(chestPt(l.psi,l.y,.2)); lb.position.y+=.14; ecgGroup.add(lb);
+});
+const leadRay=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new V3(),new V3()]),new THREE.LineDashedMaterial({color:'#ffffff',dashSize:.08,gapSize:.05,transparent:true,opacity:.8}));
+leadRay.visible=false; scene.add(leadRay);
+
+/* ───────── state ───────── */
+const S={color:'segment',op:.95,sel:null,hover:null,occ:'none',beat:true,nums:true};
+const OCC={ // affected segments, RV, ST pattern (+ elevation / − depression)
+  LAD:{terr:['LAD'],rv:false,st:{V1:1,V2:1.3,V3:1.3,V4:1,V5:.5,V6:.2,I:.4,aVL:.6,II:-.3,III:-.5,aVF:-.4}},
+  LCx:{terr:['LCx'],rv:false,st:{I:.5,aVL:.6,V5:.7,V6:.7,V7:1,V8:1,V9:1,V1:-.7,V2:-.8,V3:-.5,III:-.2}},
+  RCA:{terr:['RCA'],rv:false,st:{II:.8,III:1.2,aVF:1,V7:.4,V8:.4,V9:.3,I:-.4,aVL:-.7}},
+  RCAp:{terr:['RCA'],rv:true,st:{II:.8,III:1.3,aVF:1,V1:.6,V3R:1,V4R:1.2,V5R:1,V6R:.7,I:-.4,aVL:-.8}},
+};
+const occGroup = o => o==='RCAp'?'RCA':o;
+const stOf = id => (S.occ!=='none' && OCC[S.occ].st[id]) || 0;
+const ischemic = s => S.occ!=='none' && OCC[S.occ].terr.includes(s.terr);
+
+const GROUP_INFO={
+ LM:{t:'Left main coronary artery',d:'Arises from the left coronary sinus and bifurcates into LAD and LCx.',segs:[], leads:'—'},
+ LAD:{t:'Left anterior descending (LAD)',d:'Runs in the anterior interventricular groove. Supplies the anterior LV wall, anterior two-thirds of the septum and the apex.',segs:[1,2,7,8,13,14,17],leads:'V1–V4 (± I, aVL)'},
+ LCx:{t:'Left circumflex (LCx)',d:'Runs in the left AV groove. Supplies the lateral wall and, in left-dominant hearts, the inferior wall.',segs:[5,6,11,12,16],leads:'I, aVL, V5–V6, V7–V9'},
+ RCA:{t:'Right coronary artery (RCA)',d:'Runs in the right AV groove to the crux; supplies RV, SA/AV nodes (usually) and inferior wall via PDA (right dominance ≈ 85%).',segs:[3,4,9,10,15],leads:'II, III, aVF, V3R–V6R (proximal)'},
+};
+const segLeads = id => LEADS.filter(l=>l.segs.includes(id)).map(l=>l.id);
+
+/* ───────── ECG synthesis ───────── */
+// [P, Q, R, S, T]
+const MORPH={V1:[.08,0,.25,1.0,.1],V2:[.1,0,.4,1.1,.35],V3:[.1,.02,.7,.8,.4],V4:[.1,.05,1.0,.5,.4],V5:[.1,.12,1.2,.2,.35],V6:[.1,.15,1.0,.1,.3],
+ V3R:[.1,0,.2,.8,.2],V4R:[.1,0,.3,.6,.2],V5R:[.1,0,.35,.4,.2],V6R:[.1,0,.3,.25,.2],
+ V7:[.1,.1,.9,.1,.3],V8:[.1,.08,.7,.1,.28],V9:[.1,.05,.5,.1,.25],
+ I:[.1,.1,.8,.1,.3],II:[.15,.05,1.1,.1,.4],III:[.1,.05,.5,.2,.15],aVR:[-.1,0,.1,.9,-.3],aVL:[.05,.05,.5,.1,.1],aVF:[.12,.05,.8,.1,.3]};
+const g=(x,c,w)=>Math.exp(-.5*((x-c)/w)**2);
+const sm=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t);};
+function ecgVal(x,m,st){
+  const hyper=1+Math.abs(st)*.6;
+  return m[0]*g(x,.14,.03) - m[1]*g(x,.255,.008) + m[2]*g(x,.285,.011) - m[3]*g(x,.315,.011)
+    + st*.35*(sm(.33,.38,x)*(1-sm(.6,.68,x))) + m[4]*hyper*g(x,.5,.05);
+}
+
+/* ───────── UI ───────── */
+const GRP={pre:'g_pre',rt:'g_rt',post:'g_post',limb:'g_limb'};
+LEADS.forEach(l=>{ const b=document.createElement('button'); b.className='chip'; b.textContent=l.id; b.dataset.id=l.id;
+  b.innerHTML=l.id+'<span class="st"></span>'; b.onclick=()=>select({type:'lead',id:l.id}); l.btn=b; $(GRP[l.grp]).appendChild(b); });
+const VIEWS={Front:[.12,.12,1],'Left':[1,.1,.15],Back:[0,.1,-1],Top:[.05,1,.12],Apex:axisA.toArray(),Base:axisA.clone().negate().toArray()};
+Object.entries(VIEWS).forEach(([k,d])=>{ const b=document.createElement('button'); b.textContent=k+(k==='Apex'?' view':'');
+  b.onclick=()=>flyTo(new V3(...d).normalize()); $('views').appendChild(b); });
+let fly=null;
+function flyTo(dir){ const dist=camera.position.distanceTo(controls.target);
+  fly={t0:performance.now(),from:camera.position.clone(),to:controls.target.clone().addScaledVector(dir,dist)}; }
+$('colorBtns').onclick=e=>{ const m=e.target.dataset.m; if(!m)return; S.color=m;
+  [...$('colorBtns').children].forEach(b=>b.classList.toggle('on',b===e.target)); renderLegend(); };
+$('opac').oninput=e=>S.op=e.target.value/100;
+$('occ').onchange=e=>{ S.occ=e.target.value; refreshOcc(); renderInfo(); };
+const bind=(id,fn)=>$(id).onchange=e=>fn(e.target.checked);
+bind('L_lv',v=>lvGroup.visible=v); bind('L_nums',v=>{S.nums=v;numGroup.visible=v&&$('L_lv').checked;});
+$('L_lv').addEventListener('change',e=>numGroup.visible=e.target.checked&&S.nums);
+bind('L_cor',v=>corGroup.visible=v); bind('L_rv',v=>anaGroup.visible=v);
+bind('L_ecg',v=>ecgGroup.visible=v); bind('L_chest',v=>chest.visible=v); bind('L_beat',v=>S.beat=v);
+
+function refreshOcc(){
+  const o=S.occ, grp=o==='none'?null:occGroup(o);
+  arteries.forEach(a=>{ const dim=grp&&(a.userData.group===grp);
+    a.material.color.set(dim?'#4a4a4a':ART_COL[a.userData.group]); a.material.emissive.set(dim?'#000':ART_COL[a.userData.group]); });
+  occMarker.visible=!!grp; if(grp) occMarker.position.copy(occPos[o]);
+  LEADS.forEach(l=>{ const s=stOf(l.id), el=l.btn.querySelector('.st');
+    el.textContent=s>0?'↑':s<0?'↓':''; el.className='st '+(s>0?'up':s<0?'dn':''); });
+}
+function renderLegend(){
+  const items = S.color==='segment' ? [['Basal','hsl(10,68%,58%)'],['Mid','hsl(10,68%,50%)'],['Apical','hsl(10,68%,42%)'],['Hue = direction around the wall','#888']]
+   : S.color==='territory' ? [['LAD',ART_COL.LAD],['LCx',ART_COL.LCx],['RCA',ART_COL.RCA]] : [];
+  $('legend').innerHTML=items.map(([n,c])=>`<span><i style="background:${c}"></i>${n}</span>`).join('');
+}
+function select(sel){ S.sel=(S.sel&&sel&&S.sel.type===sel.type&&S.sel.id===sel.id)?null:sel;
+  LEADS.forEach(l=>l.btn.classList.toggle('on',S.sel&&S.sel.type==='lead'&&S.sel.id===l.id));
+  const l=S.sel&&S.sel.type==='lead'&&leadById[S.sel.id];
+  if(l&&l.mesh){ const c=TARGET.clone(); leadRay.geometry.setFromPoints([l.mesh.position.clone(),c]); leadRay.computeLineDistances(); leadRay.visible=true; }
+  else leadRay.visible=false;
+  renderInfo(); }
+function hlSet(){ const s=S.sel; if(!s)return new Set();
+  if(s.type==='seg')return new Set([s.id]);
+  if(s.type==='lead')return new Set(leadById[s.id].segs);
+  if(s.type==='art'){ const g=s.group; return new Set(segs.filter(x=>x.terr===g).map(x=>x.id)); }
+  return new Set(); }
+const tag=(t,c)=>`<span class="tag" style="${c?`border-color:${c};color:${c}`:''}">${t}</span>`;
+function renderInfo(){
+  const s=S.sel; let h='';
+  if(!s){ h=`<b class="t">Select something</b><div class="sub">Click an AHA segment (3D or bullseye), an artery, or an ECG electrode.</div>`;
+    if(S.occ!=='none'){ const o=OCC[S.occ]; h+=`<div>Occlusion: <b>${$('occ').selectedOptions[0].text}</b><br>Ischaemic segments: ${segs.filter(ischemic).map(x=>x.id).join(', ')}${o.rv?'<br>+ right ventricle':''}</div>`; } }
+  else if(s.type==='seg'){ const g=segById(s.id);
+    h=`<b class="t">Segment ${g.id} – ${g.full}</b><br>${tag(g.terr+' territory',ART_COL[g.terr])}${ischemic(g)?tag('ischaemic','#ff5a4f'):''}
+    <div style="margin-top:6px"><span class="sub">Seen by leads:</span><br>${segLeads(g.id).map(x=>tag(x)).join('')||'—'}</div>`; }
+  else if(s.type==='lead'){ const l=leadById[s.id]; const st=stOf(l.id);
+    h=`<b class="t">Lead ${l.id}</b> ${st>0?tag('ST elevation','#ff5a4f'):st<0?tag('ST depression (reciprocal)','#5aa9ff'):''}<br>
+    <span class="sub">${l.place}</span><div style="margin-top:4px">Views: <b>${l.view}</b></div>
+    <div style="margin-top:4px">${l.segs.length?'AHA segments: '+l.segs.map(x=>tag(x,ART_COL[segById(x).terr])).join(''):''}${l.rv?'RV — proximal RCA occlusion / RV infarct':''}</div>`; }
+  else if(s.type==='art'){ const i=GROUP_INFO[s.group];
+    h=`<b class="t">${s.name}</b><br>${tag(i.t,ART_COL[s.group])}<div style="margin:5px 0">${i.d}</div>
+    ${i.segs.length?`<div>Segments: ${i.segs.map(x=>tag(x,ART_COL[s.group])).join('')}</div><div>Leads: <b>${i.leads}</b></div>`:''}`; }
+  else if(s.type==='ana') h=`<b class="t">${s.name}</b>`;
+  $('info').innerHTML=h;
+}
+
+/* ───────── picking ───────── */
+const ray=new THREE.Raycaster(), mouse=new THREE.Vector2(); let down=null;
+function pick(ev){ const r=renderer.domElement.getBoundingClientRect();
+  mouse.set((ev.clientX-r.left)/r.width*2-1,-((ev.clientY-r.top)/r.height)*2+1); ray.setFromCamera(mouse,camera);
+  const vis=pickables.filter(o=>{let p=o;while(p){if(!p.visible)return false;p=p.parent;}return true;});
+  const h=ray.intersectObjects(vis,false)[0]; return h&&h.object.userData; }
+renderer.domElement.addEventListener('pointerdown',e=>down=[e.clientX,e.clientY]);
+renderer.domElement.addEventListener('pointerup',e=>{ if(!down)return; const m=Math.hypot(e.clientX-down[0],e.clientY-down[1]); down=null;
+  if(m<5){ const u=pick(e); if(u&&(u.type==='seg'||u.type==='lead'||u.type==='art'||u.type==='ana')) select({...u}); else if(!u&&S.sel) select(S.sel); } });
+let lastPick=0; renderer.domElement.addEventListener('pointermove',e=>{ if(e.timeStamp-lastPick<50)return; lastPick=e.timeStamp; const u=pick(e), tip=$('tip');
+  S.hover=u&&u.type==='seg'?u.id:null;
+  if(u){ const n=u.type==='seg'?`${u.id} · ${segById(u.id).full}`:u.type==='lead'?`Lead ${u.id}`:u.name; tip.textContent=n;
+    const r=stage.getBoundingClientRect(); tip.style.left=(e.clientX-r.left+14)+'px'; tip.style.top=(e.clientY-r.top+14)+'px'; tip.style.display='block'; renderer.domElement.style.cursor='pointer'; }
+  else{ tip.style.display='none'; renderer.domElement.style.cursor='grab'; } });
+renderer.domElement.addEventListener('pointerleave',()=>{S.hover=null;$('tip').style.display='none';});
+
+/* ───────── bullseye ───────── */
+const bull=$('bull'), bctx=bull.getContext('2d');
+const RINGS=[[.74,1],[.48,.74],[.22,.48],[0,.22]];
+let bHover=null;
+function bullSeg(x,y){ const r=bull.getBoundingClientRect(), cx=r.width/2, dx=x-cx, dy=y-cx, rad=Math.hypot(dx,dy)/(cx*.94);
+  if(rad>1)return null; const ring=RINGS.findIndex(q=>rad>=q[0]&&rad<=q[1]); if(ring<0)return null;
+  let phi=Math.atan2(-dx,-dy)*180/Math.PI; phi=(phi+360)%360;
+  if(ring===3)return 17;
+  if(ring<2){ return (ring*6)+Math.round(phi/60)%6+1; }
+  return 13+Math.round(phi/90)%4; }
+bull.addEventListener('click',e=>{const r=bull.getBoundingClientRect();const id=bullSeg(e.clientX-r.left,e.clientY-r.top);if(id)select({type:'seg',id});});
+bull.addEventListener('pointermove',e=>{const r=bull.getBoundingClientRect();bHover=bullSeg(e.clientX-r.left,e.clientY-r.top);});
+bull.addEventListener('pointerleave',()=>bHover=null);
+function drawBull(hl,t){
+  const W=bull.width, c=W/2, Rr=c*.94; bctx.clearRect(0,0,W,W);
+  const th=p=>-Math.PI/2-p*Math.PI/180;
+  segs.forEach(s=>{ const r0=RINGS[s.ring][0]*Rr, r1=RINGS[s.ring][1]*Rr; bctx.beginPath();
+    if(s.id===17) bctx.arc(c,c,r1,0,Math.PI*2);
+    else{ bctx.arc(c,c,r1,th(s.p0),th(s.p1),true); bctx.arc(c,c,r0,th(s.p1),th(s.p0),false); bctx.closePath(); }
+    const col=segColor(s); bctx.fillStyle='#'+col.getHexString(); bctx.fill();
+    if(hl.has(s.id)||bHover===s.id){ bctx.fillStyle=`rgba(255,255,255,${bHover===s.id?.3:.2+.12*Math.sin(t*5)})`; bctx.fill(); }
+    bctx.lineWidth=hl.has(s.id)?4:2; bctx.strokeStyle=hl.has(s.id)?'#fff':'#0b0f15'; bctx.stroke();
+    const mp=(s.p0+s.p1)/2, mr=s.id===17?0:(r0+r1)/2; bctx.fillStyle='#fff'; bctx.font='bold 26px system-ui'; bctx.textAlign='center'; bctx.textBaseline='middle';
+    bctx.fillText(s.id,c-Math.sin(mp*Math.PI/180)*mr,c-Math.cos(mp*Math.PI/180)*mr); });
+  bctx.fillStyle='#8b9bb0'; bctx.font='20px system-ui';
+  bctx.fillText('Anterior',c,12); bctx.fillText('Inferior',c,W-10);
+  bctx.textAlign='left'; bctx.fillText('Septal',4,c); bctx.textAlign='right'; bctx.fillText('Lateral',W-4,c);
+}
+const HEART='#c4566b', ISCH=new THREE.Color('#7a0f1c');
+function segColor(s){ let c = S.color==='segment'?s.segCol:S.color==='territory'?s.terrCol:new THREE.Color(HEART);
+  if(ischemic(s)) c=ISCH; return c; }
+
+/* ───────── ECG trace ───────── */
+const ecg=$('ecg'), ectx=ecg.getContext('2d');
+function fit(c){ const r=c.getBoundingClientRect(),d=Math.min(devicePixelRatio,2); if(c.width!==Math.round(r.width*d)){c.width=Math.round(r.width*d);c.height=Math.round(r.height*d);} }
+function drawEcg(beats){
+  const RR=60/S.bpm; fit(ecg); const W=ecg.width,H=ecg.height,d=ecg.width/ecg.getBoundingClientRect().width;
+  ectx.fillStyle='#0a1118'; ectx.fillRect(0,0,W,H);
+  ectx.strokeStyle='#14222f'; ectx.lineWidth=1; ectx.beginPath();
+  for(let x=0;x<W;x+=W/60){ectx.moveTo(x,0);ectx.lineTo(x,H);} for(let y=0;y<H;y+=W/60){ectx.moveTo(0,y);ectx.lineTo(W,y);} ectx.stroke();
+  ectx.strokeStyle='#1d3345'; ectx.beginPath(); for(let x=0;x<W;x+=W/12){ectx.moveTo(x,0);ectx.lineTo(x,H);} ectx.stroke();
+  const id = S.sel&&S.sel.type==='lead'?S.sel.id:'V4'; const m=MORPH[id], st=stOf(id), win=2.6;
+  ectx.strokeStyle=st>0?'#ff7a70':st<0?'#7ab8ff':'#46d39a'; ectx.lineWidth=2*d; ectx.beginPath();
+  const base=H*.62, amp=H*.34;
+  const cx=S.mode==='sweep'?(sweepT/win%1)*W:W, gap=S.mode==='sweep'?W*.04:0; let pen=false;
+  for(let i=0;i<=W;i+=2){
+    let age; if(S.mode==='sweep'){ const dx=(i<=cx)?cx-i:cx-i+W; if(i>cx&&i<cx+gap){pen=false;continue;} age=dx/W*win; } else age=(1-i/W)*win;
+    const ph=(((beats-age/RR)%1)+1)%1, y=base-ecgVal(ph,m,st)*amp;
+    if(pen)ectx.lineTo(i,y); else{ectx.moveTo(i,y);pen=true;} }
+  ectx.stroke();
+  if(S.mode==='sweep'){ ectx.fillStyle='#fff'; ectx.beginPath(); ectx.arc(cx,base-ecgVal((((beats)%1)+1)%1,m,st)*amp,4*d,0,7); ectx.fill(); }
+  ectx.fillStyle='#e6edf6'; ectx.font=`bold ${14*d}px system-ui`; ectx.fillText('Lead '+id+(S.sel&&S.sel.type==='lead'?'':'  (select a lead)'),8*d,18*d);
+  if(st){ ectx.fillStyle=st>0?'#ff7a70':'#7ab8ff'; ectx.fillText(st>0?'ST ↑':'ST ↓',W-60*d,18*d); }
+  ectx.fillStyle='#8b9bb0'; ectx.font=`${11*d}px system-ui`; ectx.fillText(`25 mm/s · ${S.bpm} bpm (schematic)${S.play?'':' · paused'}`,8*d,H-8*d);
+}
+
+/* ───────── main loop ───────── */
+function resize(){ const w=stage.clientWidth,h=stage.clientHeight; renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+addEventListener('resize',resize); resize();
+S.bpm=72; S.play=true; S.mode='scroll';
+let beats=0, sweepT=0, lastNow=0, lastDraw=0;
+function setBpm(v){ S.bpm=+v; $('bpm').value=v; $('bpmOut').textContent=v;
+  const rr=60000/v; $('rrout').textContent=`RR interval ${Math.round(rr)} ms`+(v<60?' · bradycardia range':v>100?' · tachycardia range':' · normal range'); }
+function userBpm(v){ setBpm(v); if(window.HR) HR.set(v,'heart'); }
+$('bpm').oninput=e=>userBpm(e.target.value);
+document.querySelectorAll('[data-bpm]').forEach(b=>b.onclick=()=>userBpm(b.dataset.bpm));
+$('play').onclick=()=>{ S.play=!S.play; $('play').textContent=S.play?'❚❚ Pause':'▶ Play'; $('play').classList.toggle('on',S.play); };
+$('mode').onclick=()=>{ S.mode=S.mode==='scroll'?'sweep':'scroll'; $('mode').textContent='Mode: '+(S.mode==='scroll'?'Scroll':'Sweep'); };
+setBpm(window.HR?HR.v:72);
+document.addEventListener('hrchange',e=>{ if(e.detail.src!=='heart') setBpm(e.detail.v); });
+function frameLoop(now){
+  requestAnimationFrame(frameLoop); const t=now/1000, dt=Math.min(.1,Math.max(0,(now-lastNow)/1000)); lastNow=now; if(!stage.offsetParent) return;
+  if(S.play){ beats+=dt*S.bpm/60; sweepT+=dt; }
+  const ph=((beats%1)+1)%1;
+  if(fly){ const k=Math.min(1,(now-fly.t0)/700), e=k*k*(3-2*k); camera.position.lerpVectors(fly.from,fly.to,e); if(k>=1)fly=null; }
+  controls.update();
+  heart.scale.setScalar(S.beat?1-.035*g(ph,.4,.07):1);
+  const hl=hlSet(); const lead=S.sel&&S.sel.type==='lead'&&leadById[S.sel.id];
+  segs.forEach(s=>{ const m=s.mesh.material, isch=ischemic(s), h=hl.has(s.id), hv=S.hover===s.id||bHover===s.id;
+    m.color.copy(segColor(s)); m.opacity=S.op; m.depthWrite=S.op>.95;
+    if(isch){ m.emissive.set('#ff1a1a'); m.emissiveIntensity=.25+.2*Math.sin(t*5); }
+    else if(h||hv){ m.emissive.copy(m.color); m.emissiveIntensity=hv?.6:.4+.15*Math.sin(t*5); }
+    else m.emissiveIntensity=0;
+    if(isch&&(h||hv)){ m.emissive.set('#ff6a6a'); m.emissiveIntensity=.6; } });
+  const rvHl=(lead&&lead.rv)||(S.occ==='RCAp');
+  RV.material.color.set(rvHl?'#4cc2ff':'#b9708a'); RV.material.opacity=S.op<.95?S.op*.45:(rvHl?.55:.42);
+  if(S.occ==='RCAp'){ RV.material.color.set('#ff4d5a'); }
+  LEADS.forEach(l=>{ if(l.mesh) l.mesh.scale.setScalar(S.sel&&S.sel.type==='lead'&&S.sel.id===l.id?1.7+.2*Math.sin(t*6):1); });
+  if(occMarker.visible) occMarker.scale.setScalar(1+.35*Math.sin(t*6));
+  arteries.forEach(a=>a.scale.setScalar(1));
+  renderer.render(scene,camera);
+  if(now-lastDraw>33){lastDraw=now;drawBull(hl,t);drawEcg(beats);}
+}
+refreshOcc(); renderLegend(); renderInfo(); requestAnimationFrame(frameLoop);
+window.__heart={select,S,flyTo}; window.__heartResize=resize;
+};
+
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{
+  const w=b.dataset.tab==='heart'; document.querySelector('.container').classList.toggle('wide',w); document.body.classList.toggle('hwide',w);
+  requestAnimationFrame(()=>window.__heartResize&&w&&window.__heartResize());
+}));
+document.addEventListener('fullscreenchange',()=>setTimeout(()=>window.__heartResize&&window.__heartResize(),100));
+// Start the 3D scene the first time the tab is opened (it needs a visible, sized container)
+document.querySelector('.tab-btn[data-tab="heart"]').addEventListener('click', () => {
+  if (!window.__heartStarted) {
+    if (typeof THREE === 'undefined') { document.getElementById('hint').textContent = 'An internet connection is needed to load three.js (3D engine)'; return; }
+    window.__heartStarted = true; window.initHeart();
+    const fs = document.createElement('button'); fs.textContent = '⛶ Fullscreen';
+    fs.onclick = () => document.fullscreenElement ? document.exitFullscreen() : document.getElementById('heart').requestFullscreen().catch(()=>{});
+    document.getElementById('views').appendChild(fs);
+  }
+  requestAnimationFrame(() => window.__heartResize && window.__heartResize());
+});
+</script>
+<script>
+/* ───── Cine Timing 3D ───── */
+function ctModel(S){
+  const RR = 60000 / S.hr, win = RR * S.gate, tres = S.vps * S.tr;
+  const phases = Math.floor(win / tres + 1e-9);
+  const lines = Math.max(1, Math.ceil(S.ny * S.fov / 100 / S.R - 1e-9));
+  const beats = Math.ceil(lines / S.vps - 1e-9);
+  const nrec = S.nrec > 0 ? Math.round(S.nrec) : phases;
+  const spacing = nrec > 0 ? win / nrec : 0, overlap = tres > 0 && spacing > 0 ? Math.max(0, 1 - spacing / tres) : 0, ratio = phases > 0 ? nrec / phases : 0;
+  const hbSlice = beats, hbBH = hbSlice * S.sbh;
+  const bhSec = hbBH * RR / 1000, nBH = Math.ceil(S.nsl / S.sbh);
+  const total = nBH * bhSec + (nBH - 1) * S.rest;
+  return { RR, win, tres, phases, lines, beats, hbSlice, hbBH, bhSec, nBH, total, unused: RR - phases * tres, nrec, spacing, overlap, ratio };
+}
+
+window.initCineTiming = function(){
+  const $ = id => document.getElementById(id);
+  const S = { hr:(window.HR ? HR.v : 72), tr:3, vps:12, ny:160, fov:100, R:2, gate:1, sbh:1, nsl:10, rest:8, target:40, trig:10, pro:false, nrec:0 };
+  $('ct_hr').value = S.hr; $('ct_hrr').value = S.hr;
+  let M = ctModel(S), sel = 0;
+  const FIELDS = { ct_hr:'hr', ct_tr:'tr', ct_vps:'vps', ct_ny:'ny', ct_fov:'fov', ct_R:'R', ct_sbh:'sbh', ct_nsl:'nsl', ct_rest:'rest', ct_target:'target' };
+  const MIN = { hr:30, tr:.5, vps:1, ny:16, fov:20, R:1, sbh:1, nsl:1, rest:0, target:5 };
+  const fmt = (x, d=0) => x.toLocaleString('en-US', { minimumFractionDigits:d, maximumFractionDigits:d });
+
+  /* ── inputs ── */
+  Object.entries(FIELDS).forEach(([id, key]) => $(id).addEventListener('input', e => {
+    const v = parseFloat(e.target.value); if (!(v >= MIN[key])) return; S[key] = v;
+    if (key === 'hr') { $('ct_hrr').value = v; if (window.HR) HR.set(v, 'timing'); } schedule();
+  }));
+  $('ct_hrr').addEventListener('input', e => { S.hr = +e.target.value; $('ct_hr').value = S.hr; if (window.HR) HR.set(S.hr, 'timing'); schedule(); });
+  document.addEventListener('hrchange', e => { if (e.detail.src === 'timing') return; S.hr = e.detail.v; $('ct_hr').value = S.hr; $('ct_hrr').value = S.hr; schedule(); });
+  $('ct_gate').addEventListener('click', e => { const b = e.target.closest('.ct-opt'); if (!b) return; S.pro = b.dataset.gate !== '1'; S.gate = S.pro ? 1 - S.trig / 100 : 1; $('ct_trigg').style.display = S.pro ? '' : 'none';
+    [...$('ct_gate').children].forEach(x => x.classList.toggle('active', x === b)); schedule(); });
+  $('ct_setvps').onclick = () => { S.vps = Math.max(1, Math.floor(S.target / S.tr + 1e-9)); $('ct_vps').value = S.vps; schedule(); };
+  $('ct_trig').addEventListener('input', e => { const v = parseFloat(e.target.value); if (!(v >= 0 && v < 50)) return; S.trig = v; if (S.pro) S.gate = 1 - v / 100; schedule(); });
+  $('ct_nrec').addEventListener('input', e => { const v = parseInt(e.target.value, 10); S.nrec = v >= 1 ? v : 0; schedule(); });
+  let pending = false;
+  function schedule(){ if (pending) return; pending = true; requestAnimationFrame(() => { pending = false; update(); }); }
+
+  /* ── numeric outputs ── */
+  function kpi(k, v, unit, sub, cls){ return `<div class="ct-kpi ${cls}"><div class="k">${k}</div><div class="v">${v}<small>${unit}</small></div><div class="s">${sub}</div></div>`; }
+  function renderText(){
+    const m = M;
+    const tCls = m.tres <= 45 ? 'ok' : m.tres <= 50 ? 'warn' : 'bad';
+    const pCls = m.phases < 1 ? 'bad' : m.phases < 10 ? 'warn' : 'ok';
+    const bCls = m.bhSec <= 12 ? 'ok' : m.bhSec <= 20 ? 'warn' : 'bad';
+    $('ct_kpis').innerHTML =
+      kpi('RR interval', fmt(m.RR), 'ms', `60,000 ÷ ${S.hr} bpm`, '') +
+      kpi('Temporal resolution', fmt(m.tres, 1), 'ms', `${S.vps} VPS × ${S.tr} ms TR`, tCls) +
+      kpi('Cardiac phases', m.phases, 'phases', L(`in a ${fmt(m.win)} ms window`, `ใน window ${fmt(m.win)} ms`), pCls) +
+      kpi('Breath-hold', fmt(m.bhSec, 1), 's', `${m.hbBH} heartbeats${S.sbh > 1 ? ` (${S.sbh} slices)` : ''}`, bCls);
+    $('ct_out').innerHTML = [
+      [L('Acquisition window', 'ช่วงเวลาเก็บข้อมูล (Acquisition window)'), `${fmt(m.win)}<span class="unit">ms</span>`],
+      [L('k-space lines per phase', 'k-space lines ต่อ phase'), `${m.lines}<span class="unit">lines</span>`],
+      ['Phases to reconstruct', `${m.nrec}<span class="unit">frames${S.nrec > 0 ? '' : ' (auto = independent phases)'}</span>`],
+      ['Frame spacing', `${fmt(m.spacing, 1)}<span class="unit">ms (window / phases)</span>`],
+      ['Frame overlap', `${fmt(m.overlap * 100, 0)}<span class="unit">% (shared data, view sharing)</span>`],
+      ['Interpolation ratio', `${fmt(m.ratio, 1)}<span class="unit">x the ${m.phases} independent phases</span>`],
+      ['Views per segment (VPS)', `${S.vps}<span class="unit">lines / phase / heartbeat</span>`],
+      ['k-space segments', `${m.beats}<span class="unit">heartbeats</span>`],
+      [L('Breath-hold', 'เวลากลั้นหายใจ (Breath-hold)'), `${fmt(m.bhSec, 1)}<span class="unit">s</span>`],
+      [L('Times', 'จำนวนครั้งที่กลั้นหายใจ'), `${m.nBH}<span class="unit">${L('breath-holds', 'ครั้ง')}</span>`],
+      [L('All times (including rest)', 'เวลารวมทั้งหมด (รวมพัก)'), `${fmt(m.total, 0)}<span class="unit">s ≈ ${fmt(m.total / 60, 1)} min</span>`],
+    ].map(([l, v]) => `<div class="result-item"><span class="result-label">${l}</span><span class="result-value">${v}</span></div>`).join('');
+    const w = [];
+    if (m.phases >= 1 && m.nrec < m.phases) w.push(L(`i ${m.nrec} reconstructed phases is fewer than the ${m.phases} independent phases, so frames are spaced wider than their data and leave gaps.`, `i ${m.nrec} phases < ${m.phases} independent phases`));
+    if (m.phases < 1) w.push(L('⚠️ Temporal resolution is longer than the acquisition window, so no phase fits. Lower VPS or TR.', '⚠️ Temporal resolution ยาวกว่า acquisition window — ไม่มี phase เลย ลด VPS หรือ TR'));
+    if (m.tres > 50) w.push(L(`⚠️ Temporal resolution ${fmt(m.tres, 1)} ms is long, so wall motion may blur (≤ ~45 ms is commonly recommended for LV function). Lower VPS or TR.`, `⚠️ Temporal resolution ${fmt(m.tres, 1)} ms ยาว — ภาพ wall motion อาจเบลอ (โดยทั่วไปแนะนำ ≤ ~45 ms สำหรับ LV function) ลด VPS หรือ TR`));
+    if (m.bhSec > 20) w.push(L(`⚠️ Breath-hold ${fmt(m.bhSec, 1)} s is very long and most patients cannot manage it. Increase VPS or R, reduce matrix/FOV, or scan fewer slices per breath-hold.`, `⚠️ Breath-hold ${fmt(m.bhSec, 1)} s ยาวมาก ผู้ป่วยส่วนใหญ่ทำไม่ได้ — เพิ่ม VPS, เพิ่ม R, ลด matrix/FOV หรือลดจำนวน slice ต่อการกลั้น`));
+    else if (m.bhSec > 12) w.push(L(`ℹ️ Breath-hold ${fmt(m.bhSec, 1)} s: some patients may not manage it. Have a fallback ready (higher R or VPS).`, `ℹ️ Breath-hold ${fmt(m.bhSec, 1)} s — ผู้ป่วยบางรายอาจกลั้นไม่ไหว ควรเตรียมทางเลือก (เพิ่ม R หรือ VPS)`));
+    if (m.phases >= 1 && m.phases < 10) w.push(L(`ℹ️ Only ${m.phases} phases per RR, so end-systole is hard to capture.`, `ℹ️ มีเพียง ${m.phases} phases ต่อ RR — จับ end-systole ได้ยาก`));
+    $('ct_warn').innerHTML = w.length ? `<div class="note-box">${w.join('<br>')}</div>` : '';
+    // table
+    const rows = [];
+    const RRs = m.RR / 1000;
+    const show = Math.min(m.beats, 60);
+    for (let k = 0; k < show; k++) {
+      const a = k * S.vps + 1, b = Math.min(m.lines, (k + 1) * S.vps);
+      rows.push(`<tr><td>Heartbeat ${k + 1}</td><td>${a} – ${b}</td><td>${fmt(k * RRs, 2)} – ${fmt((k + 1) * RRs, 2)}</td><td>${fmt(b / m.lines * 100, 0)}%</td></tr>`);
+    }
+    if (m.beats > show) rows.push(`<tr><td colspan="4">${L(`… ${m.beats - show} more heartbeats`, `… อีก ${m.beats - show} heartbeats`)}</td></tr>`);
+    $('ct_table').innerHTML = `<thead><tr><th>Segment</th><th>k-space lines</th><th>${L('Time (s)', 'เวลา (s)')}</th><th>${L('k-space filled', 'k-space เต็ม')}</th></tr></thead><tbody>` + rows.join('') + '</tbody>';
+  }
+
+  /* ── definitions ── */
+  function renderDefs(){
+    const m = M, d = (c, t, v, f, p) => `<div class="ct-def" style="--c:${c}"><div class="t">${t}<span>${v}</span></div><div class="f">${f}</div><p>${p}</p></div>`;
+    $('ct_defs').innerHTML =
+      d('#ff5a5a', 'RR interval', `${fmt(m.RR)} ms`, `60,000 ÷ HR (${S.hr} bpm)`, L('Time from one R wave to the next R wave: one full heartbeat. Everything in the cine is timed inside this window.', 'เวลาจาก R wave หนึ่งถึง R wave ถัดไป คือการเต้นของหัวใจ 1 ครั้ง')) +
+      d('#8b80e0', 'Cardiac phase', `${m.phases} phases`, `RR${S.gate < 1 ? ' × ' + Math.round(S.gate * 100) + '%' : ''} ÷ Temporal resolution`, L('One frame of the cine movie. The RR interval is cut into equal slices of time, and each slice becomes one phase.', 'ภาพ 1 เฟรมของ cine โดยแบ่ง RR interval ออกเป็นช่วงเวลาเท่า ๆ กัน แต่ละช่วงคือ 1 phase')) +
+      d('#f0a030', 'Temporal resolution', `${fmt(m.tres, 1)} ms`, `VPS × TR = ${S.vps} × ${fmt(S.tr, 1)} ms`, L('How long one phase lasts. A shorter phase freezes motion better and gives sharper wall motion.', 'ความยาวของ 1 phase ยิ่งสั้นยิ่งหยุดการเคลื่อนไหวได้ดี ภาพ wall motion คมขึ้น')) +
+      d('#46d39a', 'TR (repetition time)', `${fmt(S.tr, 1)} ms`, L('one RF pulse + one readout', 'RF pulse 1 ครั้ง + readout 1 ครั้ง'), L('Time needed to acquire one line of k-space. It is the smallest time block in the sequence.', 'เวลาที่ใช้เก็บข้อมูล k-space 1 line เป็นหน่วยเวลาที่เล็กที่สุดใน sequence')) +
+      d('#46d39a', 'VPS (views per segment)', `${S.vps} lines`, 'k-space lines / phase / heartbeat', L('How many k-space lines are acquired for each phase in every heartbeat. More VPS = fewer heartbeats, but a longer phase.', 'จำนวน k-space lines ที่เก็บต่อ phase ในแต่ละ heartbeat ยิ่ง VPS มาก heartbeat ยิ่งน้อย แต่ phase ยาวขึ้น')) +
+      d('#ff6b81', 'Breath-hold', `${fmt(m.bhSec, 1)} s`, `ceil(${m.lines} lines ÷ ${S.vps} VPS) × RR`, L(`Heartbeats needed to fill k-space for every phase (${m.hbBH} heartbeats). The patient must hold still for this whole time.`, `จำนวน heartbeat ที่ต้องใช้เติม k-space ให้ครบทุก phase (${m.hbBH} heartbeats) ผู้ป่วยต้องกลั้นหายใจนิ่งตลอดช่วงนี้`));
+  }
+
+  /* ── cardiac cycle model (schematic LV volume, t = fraction of RR after the R wave) ── */
+  const ss = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  function vol(t){
+    if (t < .05) return 1;
+    if (t < .35) return 1 - .6 * ss(.05, .35, t);
+    if (t < .42) return .4;
+    if (t < .60) return .4 + .45 * ss(.42, .60, t);
+    if (t < .85) return .85 + .05 * (t - .60) / .25;
+    return .9 + .1 * ss(.85, .97, t);
+  }
+  function stageName(t){
+    if (t < .06) return L('near end-diastole', 'ใกล้ end-diastole');
+    if (t < .33) return L('systole, ejection', 'systole ช่วงบีบเลือดออก');
+    if (t < .43) return L('near end-systole', 'ใกล้ end-systole');
+    if (t < .60) return L('early diastole, rapid filling', 'early diastole ช่วงเติมเลือดเร็ว');
+    if (t < .86) return L('mid diastole, diastasis', 'mid diastole ช่วง diastasis');
+    return L('late diastole, atrial contraction', 'late diastole ช่วง atrium บีบตัว');
+  }
+
+  /* ── canvases ── */
+  function fit(c){ const r = c.getBoundingClientRect(), d = Math.min(devicePixelRatio, 2); const w = Math.round(r.width * d), h = Math.round(r.height * d);
+    if (c.width !== w || c.height !== h) { c.width = w; c.height = h; } return d; }
+  const F = (d, s, wt = 400) => `${wt} ${s * d}px Segoe UI, Sarabun, sans-serif`;
+
+  function drawSplit(){
+    const c = $('ct_split'), d = fit(c), W = c.width, H = c.height, g = c.getContext('2d'), m = M, n = m.phases;
+    g.clearRect(0, 0, W, H);
+    const x0 = 24 * d, x1 = W - 24 * d, span = x1 - x0;
+    g.fillStyle = '#fff'; g.font = F(d, 14, 600); g.textAlign = 'left'; g.textBaseline = 'alphabetic';
+    g.fillText(L(`One RR interval = ${fmt(m.RR)} ms`, `1 RR interval = ${fmt(m.RR)} ms`), x0, 22 * d);
+    const by = 34 * d, bh = 46 * d, wph = m.tres / m.RR * span;
+    for (let p = 0; p < n; p++) {
+      const x = x0 + p * wph, on = p === sel;
+      g.fillStyle = on ? 'rgba(240,160,48,0.6)' : 'rgba(139,128,224,0.22)';
+      g.fillRect(x + .5 * d, by, Math.max(1, wph - d), bh);
+      if (wph > 3 * d || on) { g.strokeStyle = on ? '#f0a030' : 'rgba(170,160,245,0.85)'; g.lineWidth = d; g.strokeRect(x + .5 * d, by, Math.max(1, wph - d), bh); }
+    }
+    if (n * wph < span - d) {
+      g.fillStyle = 'rgba(255,255,255,0.08)'; g.fillRect(x0 + n * wph, by, span - n * wph, bh);
+      if (span - n * wph > 70 * d) { g.fillStyle = 'rgba(255,255,255,0.5)'; g.font = F(d, 11); g.textAlign = 'center'; g.fillText(L('not acquired', 'ไม่เก็บข้อมูล'), x0 + n * wph + (span - n * wph) / 2, by + bh / 2 + 4 * d); }
+    }
+    g.fillStyle = '#ff5a5a'; g.fillRect(x0 - d, by - 6 * d, 2 * d, bh + 12 * d); g.fillRect(x1 - d, by - 6 * d, 2 * d, bh + 12 * d);
+    const ly = by + bh + 20 * d; g.font = F(d, 12.5); g.fillStyle = '#c9d1d9';
+    g.textAlign = 'left'; g.fillText('R wave', x0, ly);
+    g.textAlign = 'center'; g.fillText(n ? `${n} phases × ${fmt(m.tres, 1)} ms` : L('Temporal resolution is longer than the window', 'Temporal resolution ยาวกว่า window'), x0 + span / 2, ly);
+    g.textAlign = 'right'; g.fillText(L('Next R wave', 'R wave ถัดไป'), x1, ly);
+    if (!n) return;
+    // zoom of the selected phase into its TR blocks
+    const zy = ly + 36 * d, ry = zy + 12 * d, rh = 40 * d, k = S.vps, shown = Math.min(k, 40), bw = span / shown;
+    g.fillStyle = '#fff'; g.font = F(d, 14, 600); g.textAlign = 'left';
+    g.fillText(L(`Phase ${sel + 1} zoomed = ${fmt(m.tres, 1)} ms`, `ขยาย phase ${sel + 1} = ${fmt(m.tres, 1)} ms`), x0, zy);
+    g.strokeStyle = 'rgba(240,160,48,0.8)'; g.lineWidth = d; g.setLineDash([5 * d, 4 * d]); g.beginPath();
+    g.moveTo(x0 + sel * wph, by + bh); g.lineTo(x0, ry); g.moveTo(x0 + (sel + 1) * wph, by + bh); g.lineTo(x1, ry); g.stroke(); g.setLineDash([]);
+    for (let i = 0; i < shown; i++) {
+      const x = x0 + i * bw + 2 * d, wd = Math.max(1, bw - 4 * d);
+      g.fillStyle = 'rgba(70,211,154,0.18)'; g.fillRect(x, ry, wd, rh);
+      g.strokeStyle = '#46d39a'; g.strokeRect(x, ry, wd, rh);
+      const t = (k > shown && i === shown - 1) ? '…' : bw > 46 * d ? `TR ${i + 1}` : bw > 22 * d ? `${i + 1}` : '';
+      if (t) { g.fillStyle = '#d6f5e8'; g.font = F(d, 12); g.textAlign = 'center'; g.fillText(t, x + wd / 2, ry + rh / 2 + 4 * d); }
+    }
+    g.fillStyle = '#c9d1d9'; g.font = F(d, 12.5); g.textAlign = 'center';
+    g.fillText(L(`${k} k-space lines (VPS) × TR ${fmt(S.tr, 1)} ms = ${fmt(m.tres, 1)} ms`, `${k} เส้น k-space (VPS) × TR ${fmt(S.tr, 1)} ms = ${fmt(m.tres, 1)} ms`), x0 + span / 2, ry + rh + 20 * d);
+  }
+
+  /* definitions toggle */
+  let defsOpen = false;
+  function defBtn(){ $('ct_defbtn').textContent = defsOpen ? L('ⓘ Hide definitions', 'ⓘ ซ่อนคำอธิบาย') : L('ⓘ Show definitions', 'ⓘ แสดงคำอธิบาย'); $('ct_defbtn').setAttribute('aria-expanded', String(defsOpen)); }
+  $('ct_defbtn').onclick = () => { defsOpen = !defsOpen; $('ct_defs').hidden = !defsOpen; defBtn(); };
+
+  /* breath-hold: a row of heartbeats, each one the same RR interval as the diagram above */
+  let bhStart = null;
+  function bhState(now){
+    const m = M, n = m.hbBH;
+    if (bhStart == null) return { el:0, cur:-1, within:0, done:false };
+    const el = Math.min(m.bhSec * 1000, now - bhStart), done = el >= m.bhSec * 1000;
+    const cur = Math.min(n - 1, Math.floor(el / m.RR));
+    return { el, cur, within: done ? m.RR : el - cur * m.RR, done };
+  }
+  function drawBH(now){
+    const c = $('ct_bh'), d = fit(c), W = c.width, H = c.height, g = c.getContext('2d'), m = M, n = m.hbBH;
+    g.clearRect(0, 0, W, H);
+    const x0 = 16 * d, span = W - 32 * d, bw = span / n, st = bhState(now);
+    const wph = bw * m.tres / m.RR;
+    const ey = 30 * d, ea = 20 * d;
+    g.strokeStyle = 'rgba(255,90,90,0.9)'; g.lineWidth = 1.5 * d; g.beginPath();
+    for (let i = 0; i <= span; i += 2) { const ph = (((i / bw) % 1) + .285) % 1, y = ey - ecg(ph) * ea; i ? g.lineTo(x0 + i, y) : g.moveTo(x0 + i, y); }
+    g.stroke();
+    const by = 40 * d, bh = 30 * d;
+    for (let b = 0; b < n; b++) {
+      const x = x0 + b * bw, past = st.done || b < st.cur, now_ = b === st.cur && !st.done;
+      g.fillStyle = past ? 'rgba(196,30,58,0.55)' : 'rgba(255,255,255,0.06)'; g.fillRect(x, by, bw, bh);
+      if (now_) { g.fillStyle = 'rgba(196,30,58,0.55)'; g.fillRect(x, by, bw * st.within / m.RR, bh); }
+      if (wph > 3 * d && m.phases) { g.strokeStyle = 'rgba(170,160,245,0.35)'; g.lineWidth = d; g.beginPath();
+        for (let p = 1; p <= m.phases; p++) { const px = x + p * wph; g.moveTo(px, by); g.lineTo(px, by + bh); } g.stroke(); }
+      if (now_ && m.phases) { const p = Math.floor(st.within / m.tres); if (p < m.phases) { g.fillStyle = 'rgba(240,160,48,0.85)'; g.fillRect(x + p * wph, by, Math.max(2 * d, wph), bh); } }
+      g.strokeStyle = now_ ? '#f0a030' : 'rgba(255,255,255,0.3)'; g.lineWidth = (now_ ? 2 : 1) * d; g.strokeRect(x + .5 * d, by, bw - d, bh);
+      g.fillStyle = '#ff5a5a'; g.fillRect(x - .5 * d, 8 * d, 1.5 * d, by + bh - 8 * d);
+      if (bw > 44 * d) { g.fillStyle = '#fff'; g.font = F(d, 11, 600); g.textAlign = 'center'; g.fillText(`HB ${b + 1}`, x + bw / 2, by + bh / 2 + 4 * d); }
+    }
+    g.fillStyle = '#ff5a5a'; g.fillRect(x0 + span - .5 * d, 8 * d, 1.5 * d, by + bh - 8 * d);
+    g.font = F(d, 11.5); g.fillStyle = 'rgba(255,255,255,0.6)';
+    g.textAlign = 'left'; g.fillText('0 s', x0, by + bh + 18 * d);
+    g.textAlign = 'center'; g.fillText(`${n} heartbeats × RR ${fmt(m.RR)} ms = ${fmt(m.bhSec, 1)} s`, x0 + span / 2, by + bh + 18 * d);
+    g.textAlign = 'right'; g.fillText(`${fmt(m.bhSec, 1)} s`, x0 + span, by + bh + 18 * d);
+    const t = $('ct_bhtxt');
+    if (bhStart == null) t.textContent = '';
+    else if (st.done) t.innerHTML = L(`<b style="color:#aed581">Breathe</b>: all ${m.lines} k-space lines are acquired for all ${m.phases} phases.`, `<b style="color:#aed581">หายใจได้</b>: เก็บ k-space ครบ ${m.lines} lines ทุก ${m.phases} phases แล้ว`);
+    else {
+      const kb = st.cur % m.beats, a = kb * S.vps + 1, b = Math.min(m.lines, (kb + 1) * S.vps), p = Math.floor(st.within / m.tres);
+      const left = fmt((m.bhSec * 1000 - st.el) / 1000, 1), sl = S.sbh > 1 ? ` (slice ${Math.floor(st.cur / m.beats) + 1})` : '';
+      t.innerHTML = L(`<b style="color:#ff6b81">Hold your breath</b>: ${left} s left`, `<b style="color:#ff6b81">กลั้นหายใจ</b>: เหลือ ${left} s`) + ` · Heartbeat ${st.cur + 1}/${n}${sl} · Phase ${p < m.phases ? p + 1 : '—'}/${m.phases} · k-space lines ${a}–${b} / ${m.lines}`;
+    }
+    return st;
+  }
+  function bhBtn(){ $('ct_bhplay').textContent = bhStart == null ? L('▶ Start breath-hold', '▶ เริ่มกลั้นหายใจ') : L('↺ Restart breath-hold', '↺ เริ่มกลั้นหายใจใหม่'); }
+  $('ct_bhplay').onclick = () => {
+    bhStart = performance.now(); bhBtn();
+    if (playing) { playing = false; playBtn(); }
+  };
+  function bhSub(){
+    const m = M, sl = S.sbh > 1 ? L(` per slice × ${S.sbh} slices`, ` ต่อ slice × ${S.sbh} slices`) : '';
+    $('ct_bhsub').innerHTML = L(
+      `Each heartbeat repeats the same <b>RR interval (${fmt(m.RR)} ms)</b> shown above. In every heartbeat, each of the <b>${m.phases} phases</b> receives <b>${S.vps} new k-space lines (VPS)</b>. k-space needs ${m.lines} lines, so it takes <b>${m.beats} heartbeats</b>${sl} = <b>${fmt(m.bhSec, 1)} s</b> of breath-hold. Press start to see the selected phase above follow each heartbeat in real time.`,
+      `แต่ละ heartbeat คือ <b>RR interval (${fmt(m.RR)} ms)</b> เดียวกับแผนภาพด้านบน ในทุก heartbeat แต่ละ <b>${m.phases} phases</b> จะได้ <b>k-space ใหม่ ${S.vps} lines (VPS)</b> k-space ต้องการ ${m.lines} lines จึงต้องใช้ <b>${m.beats} heartbeats</b>${sl} = กลั้นหายใจ <b>${fmt(m.bhSec, 1)} s</b> กดเริ่มเพื่อดู phase ด้านบนเคลื่อนตามแต่ละ heartbeat แบบเวลาจริง`);
+  }
+
+  /* ── 3D phase diagram ── */
+  const stage = $('ct_stage');
+  const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5)); stage.appendChild(renderer.domElement);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(38, 1, .1, 100); camera.position.set(-3.4, 3.4, 8.8);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.target.set(.3, .7, 0);
+  scene.add(new THREE.HemisphereLight('#ffffff', '#3a2a30', 1));
+  const dl = new THREE.DirectionalLight('#fff', .6); dl.position.set(-3, 6, 6); scene.add(dl);
+  const LX = 7, HY = 2.4, DZ = 2.4, X0 = -LX / 2;
+  const group = new THREE.Group(); scene.add(group);
+  const o3 = new THREE.Object3D(), V = THREE.Vector3;
+  let slabs = null, selSlab = null, selEdge = null, selDisk = null, tresLbl = null, tresLine = null;
+
+  function lbl(text, h = .26, color = '#e6edf3'){
+    const c = document.createElement('canvas'), g = c.getContext('2d'), fs = 48, font = `600 ${fs}px Segoe UI, Sarabun, sans-serif`;
+    g.font = font; const w = Math.ceil(g.measureText(text).width) + 20; c.width = w; c.height = fs + 24;
+    g.font = font; g.fillStyle = color; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(text, w / 2, c.height / 2 + 2);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map:new THREE.CanvasTexture(c), transparent:true, depthTest:false }));
+    sp.scale.set(h * w / c.height, h, 1); sp.renderOrder = 5; return sp;
+  }
+  function addLabel(text, x, y, z, h, color){ const s = lbl(text, h, color); s.position.set(x, y, z); group.add(s); return s; }
+  const lineMat = (color, opacity) => new THREE.LineBasicMaterial({ color, transparent:true, opacity });
+  function clearGroup(){
+    while (group.children.length) { const o = group.children.pop();
+      o.traverse(c => { if (c.geometry) c.geometry.dispose(); if (c.material) { if (c.material.map) c.material.map.dispose(); c.material.dispose(); } }); }
+    slabs = selSlab = selEdge = selDisk = tresLbl = tresLine = null;
+  }
+  const gs = (x, c, w) => Math.exp(-.5 * ((x - c) / w) ** 2);
+  const ecg = ph => .12 * gs(ph, .14, .03) - .12 * gs(ph, .26, .008) + 1 * gs(ph, .285, .011) - .22 * gs(ph, .315, .011) + .3 * gs(ph, .52, .05);
+  const radius = t => HY * .44 * vol(t);
+
+  function build3D(){
+    clearGroup();
+    const m = M, n = m.phases, w = m.tres / m.RR * LX;
+    const eg = new THREE.EdgesGeometry(new THREE.BoxGeometry(LX, HY, DZ)); eg.translate(0, HY / 2, 0);
+    group.add(new THREE.LineSegments(eg, lineMat('#9d93f0', .75)));
+    if (n >= 1) {
+      slabs = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color:'#8b80e0', transparent:true, opacity:.10, depthWrite:false }), n);
+      const disks = new THREE.InstancedMesh(new THREE.CylinderGeometry(1, 1, 1, 40), new THREE.MeshStandardMaterial({ color:'#e0552f', transparent:true, opacity:.5, roughness:.55, depthWrite:false }), n);
+      for (let p = 0; p < n; p++) {
+        const cx = X0 + (p + .5) * w, t = (p + .5) * m.tres / m.RR, r = radius(t);
+        o3.rotation.set(0, 0, 0); o3.position.set(cx, HY / 2, 0); o3.scale.set(w * .97, HY, DZ); o3.updateMatrix(); slabs.setMatrixAt(p, o3.matrix);
+        o3.rotation.set(0, 0, Math.PI / 2); o3.scale.set(r, Math.max(.02, w * .45), r); o3.updateMatrix(); disks.setMatrixAt(p, o3.matrix);
+      }
+      group.add(slabs, disks);
+      const step = Math.max(1, Math.ceil(n / 150)), pts = [];
+      for (let k = 0; k <= n; k += step) { const x = X0 + k * w;
+        pts.push(new V(x, 0, DZ / 2), new V(x, HY, DZ / 2), new V(x, HY, DZ / 2), new V(x, HY, -DZ / 2), new V(x, 0, DZ / 2), new V(x, 0, -DZ / 2)); }
+      group.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), lineMat('#9d93f0', .45)));
+      selSlab = new THREE.Mesh(new THREE.BoxGeometry(w * .97, HY, DZ), new THREE.MeshBasicMaterial({ color:'#f0a030', transparent:true, opacity:.32, depthWrite:false }));
+      selEdge = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(w * .97, HY, DZ)), lineMat('#f0a030', 1));
+      selDisk = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 48), new THREE.MeshStandardMaterial({ color:'#e8502a', roughness:.45 }));
+      selDisk.rotation.z = Math.PI / 2;
+      tresLbl = lbl(`Temporal resolution = ${fmt(m.tres, 1)} ms`, .26, '#f5b14a');
+      tresLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new V(0, HY + .75, 0), new V(0, HY, 0)]), lineMat('#f0a030', .9));
+      group.add(selSlab, selEdge, selDisk, tresLbl, tresLine);
+    }
+    const used = n * w;
+    if (used < LX - .01) {
+      const g = new THREE.Mesh(new THREE.BoxGeometry(LX - used, HY, DZ), new THREE.MeshBasicMaterial({ color:'#ffffff', transparent:true, opacity:.05, depthWrite:false }));
+      g.position.set(X0 + used + (LX - used) / 2, HY / 2, 0); group.add(g);
+      if (LX - used > .8) addLabel(L('not acquired', 'ไม่เก็บข้อมูล'), X0 + used + (LX - used) / 2, HY + .25, 0, .2, '#aab6c2');
+    }
+    const ep = [];
+    for (let i = 0; i <= 300; i++) { const t = i / 300; ep.push(new V(X0 + t * LX, -.6 + .52 * ecg((t + .285) % 1), DZ / 2)); }
+    group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ep), lineMat('#ff5a5a', 1)));
+    [X0, X0 + LX].forEach(x => {
+      const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new V(x, -.8, DZ / 2), new V(x, HY + .3, DZ / 2)]), new THREE.LineDashedMaterial({ color:'#ff5a5a', dashSize:.1, gapSize:.07 }));
+      l.computeLineDistances(); group.add(l);
+      addLabel('R', x, -1.0, DZ / 2, .24, '#ff7a7a');
+    });
+    addLabel(L('time →', 'เวลา →'), 0, -1.0, DZ / 2, .22, '#aab6c2');
+    addLabel(`1 RR interval = ${fmt(m.RR)} ms`, 0, HY + .4, -DZ / 2, .3, '#c9cdf5');
+  }
+  function select3D(){
+    const m = M, n = m.phases; if (!selSlab || !n) return;
+    const w = m.tres / m.RR * LX, cx = X0 + (sel + .5) * w, t = (sel + .5) * m.tres / m.RR, r = radius(t);
+    selSlab.position.set(cx, HY / 2, 0); selEdge.position.set(cx, HY / 2, 0);
+    selDisk.position.set(cx, HY / 2, 0); selDisk.scale.set(r, Math.max(.03, w * .55), r);
+    tresLbl.position.set(cx, HY + .95, 0); tresLine.position.set(cx, 0, 0);
+  }
+  function refreshSel(){
+    const m = M, n = m.phases;
+    $('ct_phase').max = Math.max(1, n); $('ct_phase').value = sel + 1;
+    $('ct_phaseOut').textContent = n ? `${sel + 1} / ${n}` : '—';
+    const a = sel * m.tres, b = (sel + 1) * m.tres;
+    $('ct_status').textContent = n ? `RR = ${fmt(m.RR)} ms · ${n} phases · phase ${sel + 1}: ${fmt(a)}–${fmt(b)} ms (${stageName((a + b) / 2 / m.RR)})` : L('No phase fits in the RR interval. Lower VPS or TR.', 'ไม่มี phase ใดอยู่ใน RR interval ลด VPS หรือ TR');
+    select3D(); drawSplit();
+  }
+  $('ct_phase').addEventListener('input', e => { sel = Math.max(0, Math.min(M.phases - 1, (+e.target.value) - 1)); refreshSel(); });
+  let playing = false, lastStep = 0;
+  function playBtn(){ $('ct_play').textContent = playing ? L('❚❚ Pause', '❚❚ หยุด') : L('▶ Play phase by phase', '▶ เล่นทีละ phase'); }
+  $('ct_play').onclick = () => { playing = !playing; playBtn(); };
+
+  /* hover + click on a phase slab */
+  const ray = new THREE.Raycaster(), mouse = new THREE.Vector2(); let lastPick = 0, downAt = null;
+  function pickPhase(e){
+    if (!slabs) return -1; const r = renderer.domElement.getBoundingClientRect();
+    mouse.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(mouse, camera);
+    const h = ray.intersectObject(slabs)[0]; return h ? h.instanceId : -1;
+  }
+  renderer.domElement.addEventListener('pointermove', e => {
+    if (e.timeStamp - lastPick < 60) return; lastPick = e.timeStamp;
+    const p = pickPhase(e), tip = $('ct_tip'), m = M;
+    if (p >= 0) {
+      tip.innerHTML = `Phase ${p + 1}: ${fmt(p * m.tres)}–${fmt((p + 1) * m.tres)} ms<br>${stageName((p + .5) * m.tres / m.RR)}`;
+      const sr = stage.getBoundingClientRect(); tip.style.left = (e.clientX - sr.left + 14) + 'px'; tip.style.top = (e.clientY - sr.top + 14) + 'px'; tip.style.display = 'block';
+      renderer.domElement.style.cursor = 'pointer';
+    } else { tip.style.display = 'none'; renderer.domElement.style.cursor = 'grab'; }
+  });
+  renderer.domElement.addEventListener('pointerdown', e => downAt = [e.clientX, e.clientY]);
+  renderer.domElement.addEventListener('pointerup', e => {
+    if (!downAt) return; const moved = Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]); downAt = null;
+    if (moved < 5) { const p = pickPhase(e); if (p >= 0) { sel = p; refreshSel(); } }
+  });
+  renderer.domElement.addEventListener('pointerleave', () => $('ct_tip').style.display = 'none');
+
+  /* ── charts ── */
+  function chart(c, fn, xs, ymax, cur, yl, thr, fmtY){
+    const d = fit(c), W = c.width, H = c.height, g = c.getContext('2d'); g.clearRect(0, 0, W, H);
+    const Lm = 46 * d, R = 14 * d, Tp = 16 * d, B = 34 * d, pw = W - Lm - R, ph = H - Tp - B;
+    const px = x => Lm + (x - xs[0]) / (xs[1] - xs[0]) * pw, py = y => Tp + ph - Math.min(y, ymax) / ymax * ph;
+    g.font = `${11 * d}px Segoe UI, Sarabun, sans-serif`; g.fillStyle = 'rgba(255,255,255,0.6)'; g.strokeStyle = 'rgba(255,255,255,0.08)'; g.lineWidth = d;
+    g.textAlign = 'right'; for (let i = 0; i <= 4; i++) { const y = ymax * i / 4; g.beginPath(); g.moveTo(Lm, py(y)); g.lineTo(W - R, py(y)); g.stroke(); g.fillText(fmtY(y), Lm - 6 * d, py(y) + 4 * d); }
+    g.textAlign = 'center'; for (let x = 40; x <= 180; x += 20) g.fillText(x, px(x), H - B + 14 * d);
+    g.fillText(L('Heart rate (bpm)', 'อัตราการเต้นหัวใจ (bpm)'), Lm + pw / 2, H - 6 * d);
+    g.save(); g.translate(12 * d, Tp + ph / 2); g.rotate(-Math.PI / 2); g.fillText(yl, 0, 0); g.restore();
+    if (thr) thr.forEach(([v, color, t]) => { g.strokeStyle = color; g.setLineDash([5 * d, 4 * d]); g.beginPath(); g.moveTo(Lm, py(v)); g.lineTo(W - R, py(v)); g.stroke(); g.setLineDash([]); g.fillStyle = color; g.textAlign = 'right'; g.fillText(t, W - R - 4 * d, py(v) - 4 * d); });
+    g.strokeStyle = '#ff6b81'; g.lineWidth = 2.5 * d; g.beginPath();
+    for (let x = xs[0]; x <= xs[1]; x += 1) { const y = fn(x); x === xs[0] ? g.moveTo(px(x), py(y)) : g.lineTo(px(x), py(y)); } g.stroke();
+    const cy = fn(cur); g.fillStyle = '#ffe34d'; g.beginPath(); g.arc(px(cur), py(cy), 5 * d, 0, 7); g.fill();
+    g.fillStyle = '#fff'; g.font = `600 ${12 * d}px Segoe UI, Sarabun, sans-serif`; g.textAlign = cur > 140 ? 'right' : 'left'; g.fillText(`${cur} bpm → ${fmtY(cy)}`, px(cur) + (cur > 140 ? -9 : 9) * d, py(cy) - 9 * d);
+  }
+  function drawCharts(){
+    const m = M;
+    chart($('ct_ch1'), hr => m.hbBH * 60 / hr, [40, 180], Math.max(30, Math.ceil(m.hbBH * 60 / 40 / 5) * 5), S.hr, 'Breath-hold (s)', [[15, '#ffc107', '15 s'], [20, '#ff6b81', '20 s']], y => fmt(y, y % 1 ? 1 : 0));
+    chart($('ct_ch2'), hr => Math.floor(60000 / hr * S.gate / m.tres + 1e-9), [40, 180], Math.max(10, Math.ceil(60000 / 40 * S.gate / m.tres / 5) * 5), S.hr, 'Cardiac phases', null, y => fmt(y, 0));
+  }
+
+  /* ── main ── */
+  function update(){
+    M = ctModel(S); sel = Math.max(0, Math.min(sel, M.phases - 1)); bhStart = null; bhBtn();
+    renderText(); renderDefs(); bhSub(); build3D(); refreshSel(); drawCharts(); drawBH(performance.now());
+  }
+  function relang(){ renderText(); renderDefs(); bhSub(); build3D(); refreshSel(); drawCharts(); drawBH(performance.now()); defBtn(); bhBtn(); playBtn(); }
+  document.addEventListener('langchange', relang);
+  function resize(){
+    const w = stage.clientWidth, h = stage.clientHeight; if (!w || !h) return;
+    renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix();
+    drawSplit(); drawCharts(); drawBH(performance.now());
+  }
+  addEventListener('resize', resize);
+  window.__ctResize = resize;
+  function loop(now){
+    requestAnimationFrame(loop);
+    if (!stage.offsetParent) return;
+    if (playing && M.phases > 0 && now - lastStep > Math.max(120, Math.min(500, 6000 / M.phases))) { lastStep = now; sel = (sel + 1) % M.phases; refreshSel(); }
+    if (bhStart != null && now - (loop.lastBH || 0) > 33) {
+      loop.lastBH = now; const st = drawBH(now);
+      if (!st.done && M.phases) { const p = Math.floor(st.within / M.tres); if (p < M.phases && p !== sel) { sel = p; refreshSel(); } }
+    }
+    controls.update(); renderer.render(scene, camera);
+  }
+  defBtn(); playBtn(); update(); resize(); requestAnimationFrame(loop);
+};
+
+document.querySelector('.tab-btn[data-tab="timing"]').addEventListener('click', () => {
+  if (!window.__ctStarted) {
+    if (typeof THREE === 'undefined') { document.getElementById('ct_stage').insertAdjacentHTML('beforeend', '<div class="ct-overlay">' + L('An internet connection is needed to load three.js (3D engine)', 'ต้องเชื่อมต่ออินเทอร์เน็ตเพื่อโหลด three.js (3D engine)') + '</div>'); return; }
+    window.__ctStarted = true; window.initCineTiming();
+  }
+  requestAnimationFrame(() => window.__ctResize && window.__ctResize());
+});
+</script>
+
+
+</body></html>
